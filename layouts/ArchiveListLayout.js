@@ -5,7 +5,7 @@ import { useState } from 'react'
 import Pagination from '@/components/Pagination'
 import formatDate from '@/lib/utils/formatDate'
 
-export default function ListLayout({ posts, title, initialDisplayPosts = [], pagination }) {
+export default function ArchiveListLayout({ posts, title, initialDisplayPosts = [], pagination }) {
   const [searchValue, setSearchValue] = useState('')
   const filteredBlogPosts = posts.filter((frontMatter) => {
     const searchContent = frontMatter.title + frontMatter.summary + frontMatter.tags.join(' ')
@@ -52,8 +52,8 @@ export default function ListLayout({ posts, title, initialDisplayPosts = [], pag
           {displayPosts.map((frontMatter) => {
             const { slug, date, title, summary, tags } = frontMatter
             return (
-              <li key={slug} className="py-4">
-                <article className="space-y-2 xl:grid xl:grid-cols-4 xl:space-y-0 xl:items-baseline">
+              <li key={slug} className="py-3">
+                <article className="space-y-2 xl:space-y-0 xl:items-baseline">
                   {/* <dl>
                     <dt className="sr-only">Published on</dt>
                     <dd className="text-base font-medium leading-6 text-gray-500 dark:text-gray-400">
@@ -61,9 +61,12 @@ export default function ListLayout({ posts, title, initialDisplayPosts = [], pag
                     </dd>
                   </dl> */}
                   <div className="space-y-3 xl:col-span-3">
-                    <div>
-                      <h3 className="text-2xl font-bold leading-8 tracking-tight">
-                        <Link href={`/blog/${slug}`} className="text-gray-900 dark:text-gray-100">
+                    <div className="flex justify-between items0-center">
+                      <h3 className="text-xl font-bold leading-8 tracking-tight">
+                        <Link
+                          href={`/blog/${slug}`}
+                          className="text-gray-900 dark:text-gray-100 hover:text-red-500"
+                        >
                           {title}
                         </Link>
                       </h3>
@@ -73,12 +76,9 @@ export default function ListLayout({ posts, title, initialDisplayPosts = [], pag
                         ))}
                       </div>
                     </div>
-                    <div className="prose text-gray-500 max-w-none dark:text-gray-400 text-lg bitter font-medium">
-                      {summary}
-                    </div>
-                    <dd className="text-sm font-medium leading-6 text-gray-500 dark:text-gray-400">
+                    {/* <dd className="text-sm font-medium leading-6 text-gray-500 dark:text-gray-400">
                       <time dateTime={date}>{formatDate(date)}</time>
-                    </dd>
+                    </dd> */}
                   </div>
                 </article>
               </li>

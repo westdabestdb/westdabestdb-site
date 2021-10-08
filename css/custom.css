@@ -1,0 +1,15 @@
+.app-font {
+  font-family: 'Source Sans Pro', sans-serif !important;
+}
+
+.bitter {
+  font-family: 'Bitter', serif !important;
+}
+
+.prose {
+  color: rgba(0, 0, 0, 0.8);
+}
+
+.dark .dark\:prose-dark {
+  color: #d4d4d4;
+}

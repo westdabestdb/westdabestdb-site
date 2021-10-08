@@ -36,33 +36,42 @@ const NewsletterForm = ({ title = 'Subscribe to the newsletter' }) => {
 
   return (
     <div>
-      <div className="pb-1 text-lg font-semibold text-gray-800 dark:text-gray-100">{title}</div>
-      <form className="flex flex-col sm:flex-row" onSubmit={subscribe}>
+      <div className="pb-1 text-lg font-bold text-gray-800 dark:text-gray-100 text-center">
+        {title}
+      </div>
+      <form className="flex" onSubmit={subscribe}>
         <div>
           <label className="sr-only" htmlFor="email-input">
             Email address
           </label>
           <input
             autoComplete="email"
-            className="px-4 rounded-md w-72 dark:bg-black focus:outline-none focus:ring-2 focus:border-transparent focus:ring-primary-600"
+            className="px-4 rounded-l-md w-72 dark:bg-black 
+            focus:ring-0
+            border-primary-500
+            border-2
+            focus:border-primary-500
+            "
             id="email-input"
             name="email"
-            placeholder={subscribed ? "You're subscribed !  🎉" : 'Enter your email'}
+            placeholder={subscribed ? "You're subscribed !  🎉" : 'Email'}
             ref={inputEl}
             required
             type="email"
             disabled={subscribed}
           />
         </div>
-        <div className="flex w-full mt-2 rounded-md shadow-sm sm:mt-0 sm:ml-3">
+        <div className="flex w-full rounded-md shadow-sm">
           <button
-            className={`py-2 sm:py-0 w-full bg-primary-500 px-4 rounded-md font-medium text-white ${
+            className={`py-2 sm:py-0 w-full bg-primary-500 px-4 rounded-r-md font-medium text-white ${
               subscribed ? 'cursor-default' : 'hover:bg-primary-700 dark:hover:bg-primary-400'
-            } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-600 dark:ring-offset-black`}
+            } focus:ring-0
+            border-primary-500
+            focus:border-primary-500 dark:ring-offset-black`}
             type="submit"
             disabled={subscribed}
           >
-            {subscribed ? 'Thank you!' : 'Sign up'}
+            {subscribed ? 'Thank you!' : 'Subscribe'}
           </button>
         </div>
       </form>
