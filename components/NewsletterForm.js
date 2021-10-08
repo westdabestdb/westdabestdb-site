@@ -11,7 +11,7 @@ const NewsletterForm = ({ title = 'Subscribe to the newsletter' }) => {
   const subscribe = async (e) => {
     e.preventDefault()
 
-    const res = await fetch(`/api/${siteMetadata.newsletter.provider}`, {
+    const res = await fetch(`https://westdabestdb.com/api/${siteMetadata.newsletter.provider}/`, {
       body: JSON.stringify({
         email: inputEl.current.value,
       }),
@@ -20,8 +20,9 @@ const NewsletterForm = ({ title = 'Subscribe to the newsletter' }) => {
       },
       method: 'POST',
     })
-
-    const { error } = await res.json()
+    const d = await res.json()
+    console.log(d, 'ddd')
+    const { error } = d
     if (error) {
       setError(true)
       setMessage('Your e-mail adress is invalid or you are already subscribed!')
