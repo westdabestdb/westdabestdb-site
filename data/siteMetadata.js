@@ -4,7 +4,7 @@ const siteMetadata = {
   headerTitle: 'Görkem Erol',
   description: 'A blog created with Next.js and Tailwind.css',
   language: 'en-us',
-  siteUrl: 'https://tailwind-nextjs-starter-blog.vercel.app',
+  siteUrl: 'https://westdabestdb.com',
   siteRepo: 'https://github.com/timlrx/tailwind-nextjs-starter-blog',
   siteLogo: '/static/images/logo.png',
   image: '/static/images/avatar.png',
