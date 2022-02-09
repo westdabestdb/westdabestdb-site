@@ -6,6 +6,7 @@ import SectionContainer from './SectionContainer'
 import Footer from './Footer'
 import MobileNav from './MobileNav'
 import ThemeSwitch from './ThemeSwitch'
+import SocialIcon from './social-icons/index'
 
 const LayoutWrapper = ({ children }) => {
   return (
@@ -18,7 +19,9 @@ const LayoutWrapper = ({ children }) => {
                 <Logo />
               </div> */}
               {typeof siteMetadata.headerTitle === 'string' ? (
-                <div className="h-6 text-xl font-semibold">{siteMetadata.headerTitle}</div>
+                <div className="h-6 text-xl font-semibold text-primary-500">
+                  {siteMetadata.headerTitle}
+                </div>
               ) : (
                 siteMetadata.headerTitle
               )}
@@ -26,7 +29,7 @@ const LayoutWrapper = ({ children }) => {
           </Link>
         </div>
         <div className="flex items-center text-base leading-5">
-          <div className="hidden sm:block">
+          <div className="hidden sm:block mr-2">
             {headerNavLinks.map((link) => (
               <Link
                 key={link.title}
@@ -36,6 +39,9 @@ const LayoutWrapper = ({ children }) => {
                 {link.title}
               </Link>
             ))}
+          </div>
+          <div className="hidden sm:flex gap-1">
+            <SocialIcon kind="github" href={siteMetadata.github} size="5" />
           </div>
           <ThemeSwitch />
           <MobileNav />
