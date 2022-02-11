@@ -1,7 +1,7 @@
 ---
 title: Stay focused and fuck burnout
 date: '2022-02-10'
-tags: ['journal']
+tags: ['brain dump']
 draft: false
 summary: Too much going on and I'm still trying to figure out how to maintain my focus and not get burned out...
 ---
