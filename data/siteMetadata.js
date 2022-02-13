@@ -1,4 +1,5 @@
 const siteMetadata = {
+  username: 'westdabestdb',
   title: 'Görkem Erol',
   author: 'Görkem Erol',
   headerTitle: 'Görkem Erol',

@@ -13,17 +13,12 @@ const LayoutWrapper = ({ children }) => {
     <SectionContainer>
       <header className="flex items-center justify-between py-8 mx-8">
         <div>
-          <Link href="/" aria-label="Tailwind CSS Blog">
+          <Link href="/" aria-label={siteMetadata.username}>
             <div className="flex items-center justify-between">
-              {/* <div className="mr-3">
-                <Logo className="w-16 fill-stone-900" />
-              </div> */}
               {typeof siteMetadata.headerTitle === 'string' ? (
-                <div className="h-6 text-3xl text-primary-500 bebas">
-                  {siteMetadata.headerTitle}
-                </div>
+                <div className="text-3xl text-primary-500 bebas">{siteMetadata.username}</div>
               ) : (
-                siteMetadata.headerTitle
+                siteMetadata.username
               )}
             </div>
           </Link>

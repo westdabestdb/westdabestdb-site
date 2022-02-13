@@ -22,6 +22,19 @@ module.exports = {
       colors: {
         primary: colors.red,
         gray: colors.neutral,
+        limey: {
+          DEFAULT: '#BDF330',
+          50: '#F4FDDE',
+          100: '#EEFCCA',
+          200: '#E2FAA4',
+          300: '#D6F77D',
+          400: '#C9F557',
+          500: '#BDF330',
+          600: '#A4DE0D',
+          700: '#7DA90A',
+          800: '#567407',
+          900: '#2F3F04',
+        },
       },
       typography: (theme) => ({
         DEFAULT: {
