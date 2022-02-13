@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import Link from './Link'
 import siteMetadata from '@/data/siteMetadata'
 import SocialIcon from '@/components/social-icons'
@@ -10,7 +11,11 @@ export default function Hello() {
         <div className="flex flex-col col-span-2 items-start justify-center w-full h-full mb-10 xl:mb-0">
           <div className="flex justify-start items-center">
             <span>
-              <img className="w-20 h-20 mr-4 rounded-full " src={'/static/images/gorkem.jpeg'} />
+              <img
+                className="w-24 h-24 mr-4 rounded-full hover:blur bg-gradient-to-r from-green-200 via-green-300 to-blue-500"
+                src={'/static/images/gorkem.png'}
+                alt="Görkem"
+              />
             </span>
             <h2 className="text-3xl font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl sm:leading-10 md:text-6xl md:leading-14">
               {siteMetadata.title}{' '}
