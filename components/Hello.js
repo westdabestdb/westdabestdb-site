@@ -13,7 +13,7 @@ export default function Hello() {
             <span>
               <img
                 className="w-24 h-24 mr-4 rounded-full hover:blur bg-gradient-to-r from-green-200 via-green-300 to-blue-500"
-                src={'/static/images/gorkem.png'}
+                src={'/static/images/gorkem.jpg'}
                 alt="Görkem"
               />
             </span>
