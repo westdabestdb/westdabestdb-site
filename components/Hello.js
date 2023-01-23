@@ -26,7 +26,7 @@ export default function Hello() {
           </div>
 
           <p className="mt-4 text-lg">
-            Co-founder, full stack developer, tech-lead and maker of production-ready apps.
+            Co-founder, developer, tech-lead and maker of production-ready apps.
           </p>
 
           <p className="mt-2 text-sm text-gray-700 dark:text-gray-400">
