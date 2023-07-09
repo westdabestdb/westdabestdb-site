@@ -16,7 +16,7 @@ const LayoutWrapper = ({ children }) => {
           <Link href="/" aria-label={siteMetadata.username}>
             <div className="flex items-center justify-between">
               {typeof siteMetadata.headerTitle === 'string' ? (
-                <div className="text-3xl text-primary-500 bebas">{siteMetadata.username}</div>
+                <div className="text-3xl bebas">{siteMetadata.username} Blog</div>
               ) : (
                 siteMetadata.username
               )}
@@ -36,8 +36,9 @@ const LayoutWrapper = ({ children }) => {
               </Link>
             ))}
           </div>
-          <div className="hidden sm:flex gap-1">
+          <div className="flex gap-4">
             <SocialIcon kind="github" href={siteMetadata.github} size="5" />
+            <SocialIcon kind="linkedin" href={siteMetadata.linkedin} size="5" />
           </div>
           <ThemeSwitch />
           <MobileNav />
