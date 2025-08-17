@@ -46,13 +46,15 @@ function ProjectCard({ project }) {
   return (
     <Link
       href={project.link}
-      className="p-4 flex-col flex lg:flex-row gap-4 group hover:bg-gray-100 dark:hover:bg-gray-800 bg-transparent bg-opacity-20 rounded-xl transition duration-200"
+      className="p-4 flex flex-col lg:flex-row gap-4 group hover:bg-gray-100 dark:hover:bg-gray-800 bg-transparent bg-opacity-20 rounded-xl transition duration-200 items-start"
     >
-      <img
-        src={project.image}
-        alt={project.name}
-        className="object-cover lg:h-24 lg:w-32 rounded-lg"
-      />
+      <div className="flex-shrink-0 self-center lg:self-start">
+        <img
+          src={project.image}
+          alt={project.name}
+          className="w-24 h-24 sm:w-28 sm:h-28 lg:w-32 lg:h-24 object-cover rounded-lg shadow-md"
+        />
+      </div>
       <div className="flex flex-col gap-2">
         <h2 className="text-2xl font-bold leading-8 tracking-tight text-gray-900 dark:text-gray-100">
           {project.name}
