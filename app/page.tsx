@@ -11,7 +11,7 @@ const LATEST_POSTS = 5
 export function generateMetadata(): Metadata {
   const site = getSite()
 
-  const description = `${site.title} in ${site.location}.`
+  const description = `${site.title}.`
 
   return {
     title: { absolute: site.name },

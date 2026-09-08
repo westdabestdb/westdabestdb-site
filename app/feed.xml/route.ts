@@ -7,7 +7,7 @@ export function GET(): Response {
   const site = getSite()
   const posts = getPosts()
   const base = site.siteUrl.replace(/\/$/, '')
-  const description = `${site.title} in ${site.location}.`
+  const description = `${site.title}.`
   const updated = posts[0] ? rfc822(posts[0].date) : new Date().toUTCString()
 
   const items = posts

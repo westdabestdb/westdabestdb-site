@@ -16,7 +16,7 @@ const THEME_SCRIPT = `(function(){try{var t=localStorage.getItem('theme');if(t==
 
 export function generateMetadata(): Metadata {
   const site = getSite()
-  const description = `${site.title} in ${site.location}.`
+  const description = `${site.title}.`
 
   return {
     metadataBase: new URL(site.siteUrl),
