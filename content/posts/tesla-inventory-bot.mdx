@@ -1,0 +1,48 @@
+---
+title: Tesla Inventory Bot
+date: "2025-02-12"
+tags: ["serverless", "supabase", "telegram"]
+summary: A friend was tired of checking Tesla inventory, so I built a bot in one day for TMCTR, our Tesla enthusiast community.
+draft: false
+accent: "#d32f2f"
+---
+
+![Tesla](/static/images/blog/tesla-inventory-bot.jpg)
+
+A friend was tired of checking Tesla inventory, so I built a bot in one day for TMCTR, our Tesla enthusiast community.
+
+As one of the admins of TMCTR, a community of over 2,500 Tesla enthusiasts and growing daily, I've seen how passionate our members are about securing their dream Tesla. But there was one recurring problem: manually refreshing Tesla's website several times a day just to check for new inventory.
+
+One of our members vented their frustration:
+
+> "There has to be a better way."
+
+I agreed. So I built the solution, within one day.
+
+## How I built it in a day
+
+To keep it scalable and cheap I went serverless-first with Supabase and the Telegram API.
+
+- **Postgres on Supabase** stores every inventory record.
+- **Row-level security** so only admins can query or modify the data.
+- **Cron** triggers a fetch every five minutes.
+- **Edge functions** call Tesla's API and store what's new.
+- **Telegram** pushes a message the moment a new car shows up.
+
+```sql
+-- poll every five minutes
+select cron.schedule(
+  'tesla-poll', '*/5 * * * *',
+  $$ select net.http_post(
+       url := 'https://…/functions/v1/poll',
+       headers := '{"Authorization":"Bearer …"}'::jsonb) $$
+);
+```
+
+## Why this matters
+
+This removes the tedious refreshing and makes the whole thing real time. On Supabase's serverless stack the bot runs with low latency, high availability and zero manual work, which is exactly what a growing community needs.
+
+Peace and love,
+
+Görkem
