@@ -1,0 +1,793 @@
+@import 'tailwindcss';
+/* Motion effects (fade-up, theme reveal, hover preview, cursor and its
+   quirks, click ripple, avatar toy). Delete this line and app/fx.css to
+   remove all of them. */
+@import './fx.css';
+
+/* ============================================================
+   Tokens — three-state theme (system default, explicit override)
+   Values are exactly those in design/mockup.html.
+   ============================================================ */
+
+:root {
+  --font-ui: var(--font-funnel-sans), ui-sans-serif, system-ui, -apple-system, 'Segoe UI',
+    sans-serif;
+  --font-display: var(--font-ui);
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --bg: #fbfcfd;
+  --elev: #f1f4f8;
+  --p: #0f172a;
+  --s: #3f4a5c;
+  --t: #64708a;
+  --q: #98a3b6;
+  --ring: rgba(15, 23, 42, 0.1);
+  --code: #eff3f7;
+  --hover: rgba(15, 23, 42, 0.06);
+  --sel: rgba(15, 23, 42, 0.14);
+
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --bg: #0a0d13;
+    --elev: #141a24;
+    --p: #e6e9ef;
+    --s: #b6bdc9;
+    --t: #8791a3;
+    --q: #5b6474;
+    --ring: rgba(230, 233, 239, 0.1);
+    --code: #11161f;
+    --hover: rgba(230, 233, 239, 0.08);
+    --sel: rgba(230, 233, 239, 0.22);
+
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme='dark'] {
+  --bg: #0a0d13;
+  --elev: #141a24;
+  --p: #e6e9ef;
+  --s: #b6bdc9;
+  --t: #8791a3;
+  --q: #5b6474;
+  --ring: rgba(230, 233, 239, 0.1);
+  --code: #11161f;
+  --hover: rgba(230, 233, 239, 0.08);
+  --sel: rgba(230, 233, 239, 0.22);
+
+  /* Native scrollbars, form controls and the canvas follow the toggle. */
+  color-scheme: dark;
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+}
+
+/* ============================================================
+   Tailwind theme mapping — `inline` so utilities reference the
+   raw token variables and follow the active theme.
+   ============================================================ */
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-elev: var(--elev);
+  --color-p: var(--p);
+  --color-s: var(--s);
+  --color-t: var(--t);
+  --color-q: var(--q);
+  --color-ring: var(--ring);
+  --color-code: var(--code);
+  --color-hover: var(--hover);
+  --color-sel: var(--sel);
+
+  --font-ui: var(--font-funnel-sans), ui-sans-serif, system-ui, -apple-system, 'Segoe UI',
+    sans-serif;
+  --font-display: var(--font-funnel-sans), ui-sans-serif, system-ui, -apple-system, 'Segoe UI',
+    sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+/* ============================================================
+   Base
+   ============================================================ */
+
+html {
+  background: var(--bg);
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--p);
+  font-family: var(--font-ui);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--sel);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--t);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.mono {
+  font-family: var(--font-mono);
+}
+
+/* ============================================================
+   Sub-page home link
+   ============================================================ */
+
+/* `.wrap` is a column flexbox, so the link would stretch the full width and
+   take the hover with it — `fit-content` keeps it to the text. */
+.home-link {
+  appearance: none;
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  width: fit-content;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--t);
+}
+.home-link:hover {
+  color: var(--p);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* ============================================================
+   Containers
+   ============================================================ */
+
+.wrap {
+  max-width: 672px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 64px;
+  padding: 128px 16px 96px;
+  line-height: 1.6;
+}
+@media (max-width: 640px) {
+  .wrap {
+    padding-top: 64px;
+  }
+}
+
+.wrap.post {
+  max-width: 768px;
+  gap: 32px;
+  padding: 48px 16px 96px;
+}
+@media (min-width: 1024px) {
+  .wrap.post {
+    padding: 64px 32px 96px;
+  }
+}
+@media (min-width: 1280px) {
+  .wrap.post {
+    padding: 80px 32px 96px;
+  }
+}
+
+.wrap.sub {
+  padding-top: 64px;
+}
+
+.blk {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ============================================================
+   Home header
+   ============================================================ */
+
+.avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  margin-bottom: 32px;
+  display: block;
+  user-select: none;
+  object-fit: cover;
+}
+
+h1.name {
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 600;
+  margin: 0;
+  line-height: 1.25;
+}
+
+p.bio {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--s);
+  margin: 0;
+  text-wrap: pretty;
+  line-height: 1.6;
+}
+p.bio a {
+  color: var(--s);
+}
+p.bio a:hover {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+/* hovering a bio link dims the rest */
+p.bio,
+p.bio a {
+  transition: color 0.18s ease;
+}
+p.bio:has(a:hover) {
+  color: var(--q);
+}
+p.bio:has(a:hover) a:hover {
+  color: var(--p);
+  text-decoration: none;
+}
+
+/* Plain text links, no container: the same hover treatment as a row title.
+   Focus rings come from the global `a:focus-visible`. */
+.social {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.social a {
+  font-size: 20px;
+  color: var(--t);
+  font-weight: 500;
+}
+.social a:hover {
+  color: var(--p);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-thickness: 1px;
+}
+
+/* ============================================================
+   Section label
+   ============================================================ */
+
+h2.lbl {
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--q);
+  margin: 0;
+  line-height: 1.6;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: fit-content;
+}
+a h2.lbl::after {
+  content: '→';
+  opacity: 0;
+  transition:
+    opacity 0.12s ease,
+    transform 0.12s ease;
+  transform: translateX(-2px);
+}
+a:hover h2.lbl {
+  color: var(--p);
+}
+a:hover h2.lbl::after {
+  opacity: 1;
+  transform: none;
+}
+
+/* ============================================================
+   List rows
+   ============================================================ */
+
+ul.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+@media (max-width: 640px) {
+  ul.list {
+    gap: 16px;
+  }
+}
+ul.list li {
+  display: flex;
+  margin: 0;
+}
+
+.item {
+  display: inline-flex;
+  flex: 1;
+  align-items: baseline;
+  gap: 8px;
+  font-size: 20px;
+  line-height: 1.6;
+  min-width: 0;
+}
+@media (max-width: 640px) {
+  .item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
+  }
+}
+.item .t {
+  color: var(--p);
+  font-weight: 500;
+  text-underline-offset: 1px;
+  white-space: nowrap;
+}
+.item:hover .t {
+  text-decoration: underline;
+}
+.item .d {
+  color: var(--q);
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+@media (max-width: 640px) {
+  .item .d {
+    white-space: normal;
+    overflow: visible;
+  }
+}
+.item .y {
+  color: var(--q);
+  flex: none;
+  font-variant-numeric: tabular-nums;
+}
+.item .n {
+  color: var(--q);
+  font-variant-numeric: tabular-nums;
+  flex: none;
+  width: 2.4em;
+}
+@media (max-width: 640px) {
+  .item .n {
+    display: none;
+  }
+}
+
+.item.stack {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0;
+}
+.item.stack .top {
+  display: flex;
+  width: 100%;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+}
+.item.stack .meta {
+  font-size: 16px;
+  color: var(--q);
+}
+.item.stack .meta b {
+  font-weight: 500;
+  color: var(--t);
+}
+@media (max-width: 640px) {
+  .item.stack .top {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
+  }
+}
+
+/* ============================================================
+   Work page
+   ============================================================ */
+
+.work-intro {
+  font-size: 20px;
+  color: var(--s);
+  margin: 0;
+}
+.stackline {
+  margin: 0;
+  font-size: 16px;
+  color: var(--q);
+}
+.stackline b {
+  font-weight: 500;
+  color: var(--t);
+}
+.filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.filter button {
+  all: unset;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--q);
+}
+.filter button:hover {
+  color: var(--p);
+}
+.filter button[aria-pressed='true'] {
+  color: var(--p);
+}
+.filter button:focus-visible {
+  outline: 2px solid var(--t);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ============================================================
+   Footer
+   ============================================================ */
+
+footer.foot {
+  font-size: 16px;
+  color: var(--q);
+}
+footer.foot .links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 20px;
+}
+footer.foot a:hover,
+footer.foot button:hover {
+  color: var(--p);
+}
+footer.foot button {
+  all: unset;
+  cursor: pointer;
+  color: var(--q);
+}
+footer.foot button:focus-visible {
+  outline: 2px solid var(--t);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ============================================================
+   Post page
+   ============================================================ */
+
+.phead {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+.phead .date {
+  color: var(--t);
+  margin: 0;
+}
+.phead h1 {
+  font-family: var(--font-display);
+  font-size: 30px;
+  line-height: 1.2;
+  font-weight: 700;
+  letter-spacing: -0.64px;
+  margin: 0;
+  text-wrap: balance;
+}
+@media (min-width: 768px) {
+  .phead h1 {
+    font-size: 36px;
+  }
+}
+@media (min-width: 1024px) {
+  .phead h1 {
+    font-size: 40px;
+  }
+}
+.pill {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-size: 16px;
+  color: var(--q);
+}
+.pill .tag {
+  color: var(--t);
+  font-weight: 500;
+}
+
+.pnav {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding-top: 16px;
+  font-size: 16px;
+  color: var(--q);
+}
+.pnav a b {
+  display: block;
+  color: var(--p);
+  font-weight: 500;
+}
+.pnav a:hover b {
+  text-decoration: underline;
+  text-underline-offset: 1px;
+}
+
+/* ============================================================
+   Prose — MDX body
+   ============================================================ */
+
+.prose-v3 {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  font-size: 18px;
+  line-height: 1.6;
+  color: var(--p);
+}
+.prose-v3 > :first-child {
+  margin-top: 0;
+}
+.prose-v3 p {
+  margin: 0;
+}
+.prose-v3 a {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-color: var(--q);
+}
+.prose-v3 a:hover {
+  text-decoration-color: var(--p);
+}
+.prose-v3 h2 {
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.2px;
+  margin: 16px 0 0;
+  line-height: 1.3;
+}
+.prose-v3 h3 {
+  font-size: 19px;
+  font-weight: 600;
+  letter-spacing: -0.1px;
+  margin: 16px 0 0;
+  line-height: 1.4;
+}
+.prose-v3 h4 {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 16px 0 0;
+  line-height: 1.4;
+}
+.prose-v3 ul,
+.prose-v3 ol {
+  margin: 0;
+  padding-left: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.prose-v3 ul {
+  list-style: disc;
+}
+.prose-v3 ol {
+  list-style: decimal;
+}
+.prose-v3 li {
+  margin: 0;
+}
+.prose-v3 li::marker {
+  color: var(--q);
+}
+.prose-v3 li b,
+.prose-v3 li strong {
+  font-weight: 500;
+}
+.prose-v3 blockquote {
+  margin: 0;
+  padding-left: 16px;
+  border-left: 2px solid var(--ring);
+  color: var(--s);
+}
+.prose-v3 blockquote p {
+  margin: 0;
+}
+.prose-v3 hr {
+  border: 0;
+  height: 16px;
+  margin: 0;
+}
+/* next/image writes real width/height attributes, which browsers treat as a
+   presentational hint — `height: auto` keeps the aspect ratio while the box is
+   still reserved before the file loads. */
+.prose-v3 img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  display: block;
+  background: var(--elev);
+}
+.prose-v3 table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 16px;
+  text-align: left;
+}
+.prose-v3 th {
+  font-weight: 500;
+  color: var(--t);
+  padding: 0 12px 6px 0;
+}
+.prose-v3 td {
+  color: var(--s);
+  padding: 2px 12px 2px 0;
+  vertical-align: top;
+}
+.prose-v3 :not(pre) > code {
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+  background: var(--code);
+  border-radius: 4px;
+  padding: 1px 5px;
+  color: var(--s);
+}
+.prose-v3 pre,
+.prose-v3 figure[data-rehype-pretty-code-figure] pre {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  line-height: 1.6;
+  background: var(--code);
+  border-radius: 8px;
+  padding: 14px 16px;
+  overflow-x: auto;
+  margin: 0;
+  color: var(--s);
+}
+.prose-v3 figure[data-rehype-pretty-code-figure] {
+  margin: 0;
+}
+.prose-v3 pre code {
+  font-family: inherit;
+  font-size: inherit;
+  background: none;
+  padding: 0;
+  border-radius: 0;
+  color: inherit;
+  display: grid;
+}
+.prose-v3 [data-rehype-pretty-code-title] {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  color: var(--q);
+  margin-bottom: 6px;
+}
+.prose-v3 [data-line] {
+  padding: 0;
+}
+
+/* shiki dual theme — colours only; `keepBackground: false` leaves the
+   background to var(--code), so a code block is still just a background. */
+.prose-v3 [data-rehype-pretty-code-figure] pre,
+.prose-v3 [data-rehype-pretty-code-figure] code,
+.prose-v3 [data-rehype-pretty-code-figure] span {
+  color: var(--shiki-light);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .prose-v3 [data-rehype-pretty-code-figure] pre,
+  :root:not([data-theme='light']) .prose-v3 [data-rehype-pretty-code-figure] code,
+  :root:not([data-theme='light']) .prose-v3 [data-rehype-pretty-code-figure] span {
+    color: var(--shiki-dark);
+  }
+}
+:root[data-theme='dark'] .prose-v3 [data-rehype-pretty-code-figure] pre,
+:root[data-theme='dark'] .prose-v3 [data-rehype-pretty-code-figure] code,
+:root[data-theme='dark'] .prose-v3 [data-rehype-pretty-code-figure] span {
+  color: var(--shiki-dark);
+}
+.prose-v3 [data-highlighted-line] {
+  background: var(--hover);
+}
+
+/* ============================================================
+   Per-post accent
+   ============================================================ */
+
+.post-accent {
+  --a: var(--p);
+}
+.post-accent .prose-v3 a {
+  text-decoration-color: color-mix(in srgb, var(--a) 55%, transparent);
+}
+.post-accent .prose-v3 a:hover {
+  color: var(--a);
+  text-decoration-color: var(--a);
+}
+.post-accent .pill .tag {
+  color: var(--a);
+}
+.post-accent ::selection {
+  background: color-mix(in srgb, var(--a) 22%, transparent);
+}
+.post-accent .prose-v3 img {
+  background: color-mix(in srgb, var(--a) 10%, var(--elev));
+}
+
+/* ============================================================
+   Motion
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* == writing/post == */
+
+/* Tag links in the post header. Colour still comes from `.pill .tag` (and
+   from `--a` on an accented post); hover only adds the underline, per the
+   "underline or colour shift" rule. */
+.pill a.tag:hover {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* `.pnav` is `justify-content: space-between`, so a lone "Previous" would
+   drift left when the newest post has no "Next" beside it. */
+.pnav .prev {
+  margin-left: auto;
+  text-align: right;
+}
+
+/* == /writing/post == */
+
+/* == home/work/now == */
+
+/* `.item .t` is `white-space: nowrap` so a desktop row keeps the title on one
+   line and ellipsises the description instead. Under 640px the row is already
+   a column, so nowrap buys nothing and a long title ("Mental health reigns
+   supreme over a job") pushed the page 3px wider than the viewport at 390px. */
+@media (max-width: 640px) {
+  .item .t {
+    white-space: normal;
+  }
+}
+
+/* == /home/work/now == */
+
+/* == static rows == */
+/* A project without a live page: same row, nothing to click. */
+.item--static:hover .t {
+  text-decoration: none;
+}
+/* == /static rows == */
