@@ -1,0 +1,110 @@
+---
+title: "ccenv: several Claude Code accounts at once"
+date: "2026-09-08"
+tags: ["claude code", "cli", "open source"]
+summary: "Claude Code keeps one login per machine and I have two accounts. ccenv gives each terminal its own, both signed in at once, and it never stores a token."
+draft: false
+accent: "#e64a19"
+---
+
+![ccenv.dev](/static/images/blog/ccenv.webp)
+
+Claude Code keeps one login per machine. I have a personal account and a work account, so for a while my day had a stupid loop in it: `claude auth logout`, `claude auth login`, find the right browser tab, sign in, and lose whatever session I had going on the other account. Eventually I wrote a tool.
+
+ccenv gives each terminal its own account. You switch with one command, and you can keep as many accounts signed in as you have terminals open. It's a bash script under MIT, and it never touches a token.
+
+```
+$ ccenv list
+● default    me@gmail.com        max
+  work       me@company.com      team
+```
+
+The dot marks the account this shell is on.
+
+## The whole trick is one environment variable
+
+Claude Code reads `CLAUDE_CONFIG_DIR`. Point it at a different directory and you get a different config: different settings, different sessions and, this is the part I was after, a different entry in the OS credential store. Claude Code keys credentials by config directory. Two shells pointed at two directories are two signed-in accounts at the same time, and neither can log the other out.
+
+A profile in ccenv is just a directory under `~/.ccenv/profiles/<name>`. Your existing `~/.claude` is the profile called `default`, so there's nothing to migrate. Install it and your current login is already a profile.
+
+Everything else in the roughly 1,100 lines of bash exists to make that trick pleasant to use and hard to misuse.
+
+## Share the read-only stuff, copy the rest
+
+A fresh profile with none of my plugins, skills or hooks would be useless, so a new profile inherits from `~/.claude`. Not everything can be shared the same way though.
+
+| | What | Why |
+|---|---|---|
+| Symlinked | plugins, skills, commands, hooks, CLAUDE.md | Mostly read-only. Every account gets my full setup, and when I update a skill it updates everywhere. |
+| Copied | settings.json, settings.local.json, mcp_config.json | Claude Code writes to these while it runs. Two accounts sharing one file would race. Each copy can also drift on purpose. |
+| Fresh | sessions, projects, history, credentials | This is the identity, so it must never leak between accounts. |
+
+`ccenv sync work` re-copies the mutable files when I've changed something in `~/.claude` and want a profile to catch up. On filesystems without symlinks, like Git Bash without developer mode, the shared items get copied instead.
+
+One thing that bit me: hooks are shared, and they run with `CLAUDE_CONFIG_DIR` set to the active profile. A hook that hard-codes `~/.claude/...` reads the wrong account's state when two sessions run side by side. Read `$CLAUDE_CONFIG_DIR` instead.
+
+## `use` has to be a shell function
+
+`ccenv use work` changes the current shell. A child process can't export a variable into its parent, so `use` can't live in the binary. The installer adds one line to your rc that defines a shell function. `use` and `unuse` are handled right there, and everything else is forwarded to the real command.
+
+```sh
+ccenv() {
+  case "${1:-}" in
+    use)
+      local dir
+      dir="$(command ccenv resolve "$2")" || return 1
+      if [ -z "$dir" ]; then unset CLAUDE_CONFIG_DIR
+      else export CLAUDE_CONFIG_DIR="$dir"; fi
+      export CCENV_PROFILE="$2"
+      ;;
+    unuse) unset CLAUDE_CONFIG_DIR CCENV_PROFILE ;;
+    *) command ccenv "$@" ;;
+  esac
+}
+```
+
+The binary does the lookup. `resolve` prints the profile's directory, prints nothing for `default`, and fails for an unknown name so the shell is left as it was. The function only does the two lines a function has to do. Subshells inherit the choice, and a new terminal starts clean.
+
+`ccenv run work -- -p "summarize this repo"` is the other shape: one session as one account, and the shell is untouched afterwards. The implementation is a single `exec env CLAUDE_CONFIG_DIR=... claude "$@"`.
+
+## Then I got tired of typing `use`
+
+`ccenv default work` makes every new shell start on `work`. It's a plain profile name saved in `~/.ccenv/default`.
+
+`ccenv pin work ~/work` attaches an account to a folder. Any new terminal opened at or under it comes up on `work`, so the default can stay my personal account. The nearest pin beats parent folders, a pin beats the default, and an explicit `use` beats everything. Pins live in one central file, never inside the repo, so a folder you clone can't quietly select one of your accounts.
+
+Both are resolved when a shell starts, not on `cd`, and auto-applied profiles are re-resolved for every new terminal from its own directory. That way a pin can't leak into a new tab or a tmux pane that inherited the environment of a shell that happened to be sitting in a pinned folder. Only an explicit `use` is sticky.
+
+## Zero secrets, and paranoid about `rm -rf`
+
+ccenv never sees a token. Login is `claude auth login` with the profile's config directory set, and the token lands in macOS Keychain (or a per-profile credentials file on Linux and Windows) exactly as it would without ccenv. `~/.ccenv` is `0700`, copied config files are `0600`, and it doesn't phone home.
+
+The scary command is `remove`, because it deletes a directory. It signs the profile out first. It won't touch `default`, a symlinked profile directory, or any path outside `~/.ccenv/profiles`. `CCENV_HOME` has to be a real directory under `$HOME`, with no `..` and no symlink, and profile names are limited to `[A-Za-z0-9._-]`. Rc edits go through `printf %q` and an atomic rewrite, and the shell snippet is copied into `~/.ccenv/shell/` so startup never runs code out of a repo checkout.
+
+The web installer fetches over HTTPS and refuses to install anything that doesn't look like the script it expected, so a truncated download or an error page can't end up on your `PATH`.
+
+## Same idea for the desktop app
+
+On macOS the install also bundles `ccdesktop`, which does the same thing for the Claude Desktop app: several accounts at once, each in its own window. `ccenv update` keeps both current and swaps the binary in atomically.
+
+## What I'd tell myself in June
+
+The best decision was not building anything Claude Code already does. A config directory that keys the credential store was enough. ccenv has no daemon and no database, and it never handles a token. I'm not sure I'd have been comfortable shipping it otherwise.
+
+The second one was splitting "must run in the parent shell" from everything else on day one. The shell snippet stays small and dumb and the binary does the thinking, which also means the risky code never runs at shell startup.
+
+Copy versus symlink turned out to be a real decision, not a detail. Anything Claude Code writes to at runtime has to be a copy, or two concurrent sessions will race on it.
+
+And the one destructive command got more care than the rest of the script combined, which is how it should be for anything that runs `rm -rf`.
+
+Install it, create a second profile, open two terminals and run `claude` in both.
+
+```sh
+curl -fsSL https://ccenv.dev/install.sh | bash
+```
+
+Source is at [github.com/ViaViaSolutions/ccenv](https://github.com/ViaViaSolutions/ccenv).
+
+Peace and love,
+
+Görkem
