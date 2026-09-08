@@ -5,20 +5,16 @@
 /.pnp
 .pnp.js
 
-# testing
-/coverage
-
 # next.js
 /.next/
+/.next-*/
 /out/
-public/sitemap.xml
+/build
 .vercel
 
-# production
-/build
-*.xml
-# rss feed
-/public/feed.xml 
+# typescript
+*.tsbuildinfo
+next-env.d.ts
 
 # misc
 .DS_Store
@@ -30,7 +26,12 @@ yarn-debug.log*
 yarn-error.log*
 
 # local env files
+.env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
+.gstack/
+
+# preview capture scratch (scripts/previews.mjs)
+/.previews-tmp/
