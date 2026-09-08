@@ -1,0 +1,168 @@
+{
+  "name": "Görkem Erol",
+  "title": "Senior Product Engineer",
+  "location": "Istanbul, Turkey",
+  "email": "westdabestdb@gmail.com",
+  "links": {
+    "github": "https://github.com/westdabestdb",
+    "linkedin": "https://www.linkedin.com/in/westdabestdb",
+    "site": "https://westdabestdb.com"
+  },
+  "summary": "AI-native Senior Product Engineer (9+ years) who has fully rebuilt the way software gets built around agentic coding and LLM-assisted workflows: ships production-caliber applications from scratch in a week, and delivered a full country expansion (app, backend, infrastructure) as sole engineer using AI-first tooling. Track record spans enterprise security (clients including Mastercard), cross-platform mobile apps, backend systems, and Web3 platforms used by tens of thousands of active users across multiple countries. Takes full product ownership: defines scope, drives architecture, leads engineering teams, and is accountable for what ships. Works best in teams that move fast and own what they build.",
+  "experience": [
+    {
+      "company": "Flovi",
+      "role": "Senior Software Engineer",
+      "start": "2025-05",
+      "end": null,
+      "location": "Finland, Remote",
+      "stack": ["Flutter", "Laravel", "Node.js / Nest.js", "PostgreSQL"],
+      "bullets": [
+        "Own Flovi's Spain market expansion end-to-end as sole engineer, architecting and building the Flutter app and full Laravel/PostgreSQL backend infrastructure for a new country from scratch, at a pace made possible by an AI-first development workflow.",
+        "Drove AI-first development adoption across the team, making agentic coding and LLM-assisted tooling part of the standard build workflow.",
+        "Built the driver acquisition web funnel powering growth in new markets, handling 100% of new driver onboarding.",
+        "Ship full-stack features weekly across the Laravel backend and Flutter app for Driver Squad, a product operating in 4 countries.",
+        "Planned and developed a custom background location tracking package for the Flutter driver app, delivering reliable real-time GPS tracking across Android and iOS.",
+        "Rewrote core backend services from Laravel to Nest.js/TypeScript, improving type safety and maintainability across the stack.",
+        "Built AI-powered internal tooling that replaced manual ops workflows, freeing the ops team to focus on higher-value work."
+      ]
+    },
+    {
+      "company": "4Human",
+      "role": "Senior Software Engineer",
+      "start": "2024-02",
+      "end": "2025-02",
+      "location": "Norway, Hybrid",
+      "stack": ["Flutter", "Laravel", "Codemagic", "GitHub Actions"],
+      "bullets": [
+        "Architected and shipped a cross-platform Flutter HRM app with a Laravel backend from zero to App Store launch in under 6 months, onboarding 10,000+ users in the first 3 months, 3x the initial growth target.",
+        "Delivered the full mobile HR suite: attendance and time registration, vacation, absence and sick-leave tracking, work plans, payslips, travel expenses, employment documents, and employee handbooks.",
+        "Engineered the app as a multi-tenant platform with offline support and feature flags, enabling per-client rollout of capabilities across customer companies.",
+        "Built and led a team of 4 engineers, introducing code review standards and clear task ownership that cut review turnaround from days to same-day.",
+        "Automated the full build and release pipeline via CodeMagic and GitHub Actions, reducing deployment time from hours to minutes and enabling continuous delivery with zero manual intervention."
+      ]
+    },
+    {
+      "company": "Lupasafe",
+      "role": "Senior Software Engineer",
+      "start": "2020-05",
+      "end": "2025-05",
+      "location": "Netherlands, Remote",
+      "stack": ["Swift", "SwiftUI (iOS / macOS)"],
+      "bullets": [
+        "Built Swift iOS and macOS security applications used by 20,000+ active users, serving enterprise clients including Mastercard.",
+        "Cut security vulnerabilities by 70% through RSA asymmetric encryption and hardened data protection, eliminating an entire class of attack vectors and meeting GDPR requirements across a Fortune 500 client base.",
+        "Refactored the Swift/SwiftUI codebase to modular architecture, cutting production defects and speeding up feature delivery."
+      ]
+    },
+    {
+      "company": "Blocklords",
+      "role": "Senior Software Engineer",
+      "start": "2021-03",
+      "end": "2023-08",
+      "location": "Singapore, Remote",
+      "stack": ["Nest.js", "PostgreSQL", "Web3.js", "Solidity"],
+      "bullets": [
+        "Designed high-throughput blockchain architecture on Ethereum Layer 2 serving 50,000+ active users, cutting per-transaction gas costs through smart contract optimization and transaction batching.",
+        "Built and scaled a Web3 marketplace and IDO platform to 30,000+ users using Nest.js, PostgreSQL, and Web3.js, with on-chain features that drove higher transaction volume and platform revenue.",
+        "Led 5 engineers across multiple concurrent blockchain workstreams, shipping every major release on schedule."
+      ]
+    },
+    {
+      "company": "Fonesoft",
+      "role": "Software Engineer",
+      "start": "2020-02",
+      "end": "2020-11",
+      "location": "USA, Remote",
+      "stack": ["JavaScript", "PHP", "SuiteCRM", "Jira"],
+      "bullets": [
+        "Delivered Jira Service Desk and SuiteCRM integrations for enterprise clients, streamlining support operations.",
+        "Developed a production-grade QuickBooks integration plugin in JavaScript and PHP, automating financial data reconciliation and saving accounting teams hours of manual work per week.",
+        "Extended SuiteCRM's payment processing capabilities with custom-built modules, improving cross-team payment workflows and increasing platform operational efficiency."
+      ]
+    },
+    {
+      "company": "Visitu",
+      "role": "Software Engineer",
+      "start": "2019-03",
+      "end": "2020-02",
+      "location": "USA, Remote",
+      "stack": ["Flutter", "Java", "Objective-C", "BLE"],
+      "bullets": [
+        "Shipped production iOS and Android applications in Flutter from a single unified codebase, reaching thousands of active monthly users across both platforms.",
+        "Built platform-native API bridges in Java (Android) and Objective-C (iOS) for real-time communication with peripheral hardware, resulting in lower connection latency and higher device reliability.",
+        "Designed and implemented a custom Bluetooth Low Energy (BLE) protocol module from scratch, enabling device pairing and data synchronization."
+      ]
+    }
+  ],
+  "skills": [
+    {
+      "label": "AI-Native Development",
+      "items": [
+        "Agentic coding (Claude Code)",
+        "LLM integration",
+        "AI-assisted development workflows",
+        "AI-powered automation"
+      ]
+    },
+    {
+      "label": "Languages",
+      "items": ["TypeScript / JavaScript", "Dart", "Swift", "PHP", "Solidity", "SQL"]
+    },
+    {
+      "label": "Mobile",
+      "items": ["Flutter", "SwiftUI", "native bridges (Java / Objective-C)"]
+    },
+    {
+      "label": "Backend",
+      "items": ["Node.js / Express.js", "Laravel", "Nest.js", "Prisma ORM"]
+    },
+    {
+      "label": "Frontend",
+      "items": ["React / Next.js", "Angular"]
+    },
+    {
+      "label": "Data & Infra",
+      "items": ["PostgreSQL", "AWS", "Docker", "CI/CD (GitHub Actions, Codemagic)"]
+    },
+    {
+      "label": "Web3",
+      "items": ["Ethereum Layer 2", "Web3.js", "smart contracts"]
+    }
+  ],
+  "sideProjects": [
+    {
+      "name": "ccenv",
+      "description": "CLI tool for signing into and running multiple Claude Code accounts simultaneously, with isolated per-account environments.",
+      "links": [
+        { "label": "ccenv.dev", "href": "https://ccenv.dev" },
+        {
+          "label": "github.com/ViaViaSolutions/ccenv",
+          "href": "https://github.com/ViaViaSolutions/ccenv"
+        }
+      ]
+    },
+    {
+      "name": "Charles",
+      "description": "Workout coach app (Flutter, Node.js), designed, built, and shipped solo in 3 weeks, iterating on real user feedback.",
+      "links": [{ "label": "getcharles.pro", "href": "https://getcharles.pro" }]
+    },
+    {
+      "name": "Flutter Background Location Tracker (fork)",
+      "description": "Maintained fork of the Flutter background location tracking plugin (Android / iOS) with reliability fixes; used in production at Flovi.",
+      "links": [
+        {
+          "label": "github.com/westdabestdb/flutter-background-location-tracker-fixed",
+          "href": "https://github.com/westdabestdb/flutter-background-location-tracker-fixed"
+        }
+      ]
+    }
+  ],
+  "education": [
+    {
+      "school": "University of Manitoba",
+      "degree": "Computer Science",
+      "years": "2017–2019 (2 years completed)"
+    }
+  ]
+}

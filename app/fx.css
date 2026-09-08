@@ -1,0 +1,420 @@
+/* ============================================================
+   Motion effects — one file, six independent blocks.
+
+   Each block below is self-contained: delete a block (and the
+   component named in its comment) to remove that effect. Every
+   block carries its own `prefers-reduced-motion: reduce` guard
+   on top of the global kill-switch at the end of globals.css.
+
+   Imported from app/globals.css. No colours beyond the existing
+   `p` / `fg` grey tokens at low alpha, no borders.
+   ============================================================ */
+
+/* --- 1. Staggered fade-up on load ---------------------------
+   Pure CSS: `--i` comes from `:nth-child`, so there is no JS and
+   no hydration cost. `animation-fill-mode: both` holds the end
+   state, so the page is fully visible at rest.
+   ------------------------------------------------------------ */
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.wrap > * {
+  animation: rise 480ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation-delay: calc(var(--i, 0) * 45ms);
+}
+
+/* Index the first ten children, then clamp: the last block never
+   waits longer than 10 × 45ms = 450ms. */
+.wrap > *:nth-child(1) {
+  --i: 0;
+}
+.wrap > *:nth-child(2) {
+  --i: 1;
+}
+.wrap > *:nth-child(3) {
+  --i: 2;
+}
+.wrap > *:nth-child(4) {
+  --i: 3;
+}
+.wrap > *:nth-child(5) {
+  --i: 4;
+}
+.wrap > *:nth-child(6) {
+  --i: 5;
+}
+.wrap > *:nth-child(7) {
+  --i: 6;
+}
+.wrap > *:nth-child(8) {
+  --i: 7;
+}
+.wrap > *:nth-child(9) {
+  --i: 8;
+}
+.wrap > *:nth-child(10) {
+  --i: 9;
+}
+.wrap > *:nth-child(n + 11) {
+  --i: 10;
+}
+
+/* Post page: the home link, the header and the body rise as
+   three units. Nothing below them animates, and nothing inside
+   the prose does. */
+.wrap.post > *:nth-child(n + 4) {
+  animation: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wrap > * {
+    animation: none;
+  }
+}
+
+/* --- 2. Theme toggle circular reveal ------------------------
+   Driver: components/ThemeToggle.tsx. The default cross-fade is
+   removed so the new theme's snapshot simply wipes over the old
+   one under a growing circle animated from JS.
+   ------------------------------------------------------------ */
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+::view-transition-old(root) {
+  z-index: 1;
+}
+::view-transition-new(root) {
+  z-index: 2;
+}
+::view-transition-image-pair(root) {
+  isolation: auto;
+}
+
+/* Reduced motion never reaches the API — ThemeToggle checks the
+   query before calling `startViewTransition` — but if a snapshot
+   is somehow live, hold it still rather than animate it. */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+  }
+}
+
+/* --- 3. Hover preview --------------------------------------
+   Component: components/fx/HoverPreview.tsx, mounted once in
+   the root layout. A 240×150 image of the product floats to
+   the right of the cursor while a project row is hovered.
+
+   The agreed exception to "no borders, no shadows": this is an
+   image lifting off the page, not a content container, so it
+   gets an 8px radius and a soft shadow. No border, no colour.
+   ------------------------------------------------------------ */
+
+:root {
+  --preview-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --preview-shadow: 0 12px 40px rgba(0, 0, 0, 0.55);
+  }
+}
+
+:root[data-theme='dark'] {
+  --preview-shadow: 0 12px 40px rgba(0, 0, 0, 0.55);
+}
+
+/* `translate3d` is written from rAF, so no transition on transform here —
+   the trailing comes from the lerp, not from CSS. */
+.hoverprev {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 50;
+  pointer-events: none;
+  opacity: 0;
+  will-change: transform, opacity;
+  transition: opacity 120ms ease;
+}
+.hoverprev[data-shown] {
+  opacity: 1;
+  transition: opacity 160ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.hoverprev img {
+  display: block;
+  width: 240px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: var(--preview-shadow);
+  background: var(--elev);
+  transform: scale(0.96);
+  transition: transform 160ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.hoverprev[data-shown] img {
+  transform: none;
+}
+
+/* Anchored to the cursor, no scale, instant fade. The component drops the
+   lerp under the same query. */
+@media (prefers-reduced-motion: reduce) {
+  .hoverprev,
+  .hoverprev[data-shown] {
+    transition: none;
+  }
+  .hoverprev img,
+  .hoverprev[data-shown] img {
+    transform: none;
+    transition: none;
+  }
+}
+
+/* --- 4. Custom cursor ---------------------------------------
+   Component: components/fx/Cursor.tsx, mounted once in the root
+   layout. A comic arrow — white fill, thick dark outline —
+   pinned to the pointer. It leans into its direction of travel,
+   stretches a little at speed and squashes on click, on damped
+   springs written from rAF (the spring class itself is
+   lib/spring.ts, shared with the avatar toy). A pointing hand
+   over links, a rounded I-beam over text. On the dark theme the
+   fill and outline swap so it still pops.
+
+   `z-index: 60` puts it above the hover preview at 50; it is
+   `pointer-events: none`, so clicking, selecting text and focus
+   rings all behave exactly as they did.
+   ------------------------------------------------------------ */
+
+/* The only place `cursor: none` is set, and it hangs off a class the
+   component adds to <html> while it is mounted — so no-JS, touch and
+   coarse pointers never lose the native cursor. */
+html.has-cursor,
+html.has-cursor * {
+  cursor: none !important;
+}
+
+:root {
+  --cur-fill: #fbfcfd;
+  --cur-line: #0f172a;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --cur-fill: #141a24;
+    --cur-line: #e6e9ef;
+  }
+}
+
+:root[data-theme='dark'] {
+  --cur-fill: #141a24;
+  --cur-line: #e6e9ef;
+}
+
+/* The wrapper is translated so the hotspot sits on the pointer; the
+   drawings rotate and scale around that same point. Transforms are
+   written from rAF, so they are never in a transition list. */
+.cur {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0;
+  will-change: transform;
+  transition: opacity 120ms ease;
+}
+.cur[data-shown] {
+  opacity: 1;
+}
+
+.cur svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  overflow: visible;
+  opacity: 0;
+  will-change: transform;
+  transition: opacity 120ms ease;
+}
+.cur .cur-arrow {
+  transform-origin: 6px 4px;
+}
+.cur .cur-hand {
+  transform-origin: 13px 1px;
+}
+.cur .cur-beam {
+  transform-origin: 7px 15px;
+}
+
+.cur[data-mode='default'] .cur-arrow,
+.cur[data-mode='link'] .cur-hand,
+.cur[data-mode='text'] .cur-beam {
+  opacity: 1;
+}
+
+.cur path.body {
+  fill: var(--cur-fill);
+  stroke: var(--cur-line);
+}
+.cur path.line {
+  stroke: var(--cur-line);
+}
+.cur path.core {
+  stroke: var(--cur-fill);
+}
+
+/* Still follows the pointer; the component drops tilt, stretch and
+   squash under the same query, and nothing here transitions. */
+@media (prefers-reduced-motion: reduce) {
+  .cur,
+  .cur svg {
+    transition: none;
+  }
+}
+
+/* --- 5. Click impact ----------------------------------------
+   Component: components/fx/Ripple.tsx, mounted once in the root
+   layout. One throwaway inline `<svg class="impact">` per
+   primary-button `pointerdown`, centred on the click and removed
+   on the ring's `animationend`, at most six live at once.
+
+   Drawn in the cursor's own ink so the two read as one hand: a
+   ring that pops 8px → 34px with a little overshoot, and six
+   short radial dashes that fly out and shrink to nothing. The
+   colour falls back to `--p`, so this block still works if the
+   custom cursor block above is ever deleted.
+
+   The second agreed exception to "no borders, no rings": these
+   are strokes on a transient, `pointer-events: none` element
+   that holds no content and is gone in 360ms — not a container.
+   `z-index: 55` keeps it under the cursor at 60.
+   ------------------------------------------------------------ */
+
+.impact {
+  position: fixed;
+  z-index: 55;
+  width: 48px;
+  height: 48px;
+  /* `left`/`top` are the click point; the margin centres the box on it, so
+     the root carries no transform and the children own theirs outright. */
+  margin: -24px 0 0 -24px;
+  /* The dashes fly out to radius 30, past the 24px half-box. */
+  overflow: visible;
+  pointer-events: none;
+  fill: none;
+  stroke: var(--cur-line, var(--p));
+  animation: impact-fade 360ms ease-out forwards;
+}
+
+@keyframes impact-fade {
+  from {
+    opacity: 1;
+  }
+  55% {
+    opacity: 0.8;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* r=17 is the 34px end state; 0.235 is the 8px start. `non-scaling-stroke`
+   holds the outline at 2.5px the whole way out instead of scaling with it,
+   and the 1.05 / 0.95 finish leaves the ring 5% wider than tall, so it reads
+   as drawn rather than printed. */
+.impact .imp-ring {
+  stroke-width: 2.5;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: impact-ring 360ms cubic-bezier(0.2, 0.9, 0.3, 1.25) forwards;
+}
+
+@keyframes impact-ring {
+  from {
+    transform: scale(0.235);
+  }
+  to {
+    transform: scale(1.05, 0.95);
+  }
+}
+
+/* Each dash sits in a `<g>` rotated 60° apart, so all six share one keyframe:
+   translate 20px along its own radius (inner end 10 → 30) while the dash
+   pattern eats it from the outer end down to zero length. */
+.impact .imp-dash {
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-dasharray: 7 7;
+  animation: impact-dash 300ms cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+}
+
+@keyframes impact-dash {
+  from {
+    transform: translateY(0);
+    stroke-dashoffset: 0;
+  }
+  to {
+    transform: translateY(-20px);
+    stroke-dashoffset: 7;
+  }
+}
+
+/* The component creates nothing under this query; belt and braces, since an
+   impact with `animation: none` would never reach `animationend`. */
+@media (prefers-reduced-motion: reduce) {
+  .impact {
+    display: none;
+  }
+}
+
+/* --- 6. Avatar toy ------------------------------------------
+   Component: components/fx/AvatarToy.tsx, used by
+   components/Avatar.tsx. Only the box the picture sits in lives
+   here — the spin (700ms, Web Animations on the image's own
+   `rotate` property) and the rubber-band drag (`d × 0.55 /
+   (1 + d / 220)`, easing to ≈121px, stretching to `scaleX 1.22` /
+   `scaleY .9`, springing home at k .18 / d .74, written on the
+   wrapper's `transform` from a rAF loop) are driven from JS. Two
+   properties on two elements, so they never collide.
+
+   `align-self` keeps the wrapper 64px wide inside the flex
+   column, so the grab area is the avatar and not the whole
+   672px row. No cursor of its own: the custom cursor decides.
+   ------------------------------------------------------------ */
+
+.avatar-toy {
+  align-self: flex-start;
+  display: block;
+  width: 64px;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  will-change: transform;
+}
+
+/* The native image drag would otherwise take the gesture over a few pixels in
+   and the wrapper would stop seeing pointermoves. `draggable={false}` on the
+   image and a cancelled `dragstart` say the same thing three ways. */
+.avatar-toy,
+.avatar-toy img {
+  -webkit-user-drag: none;
+}
+
+/* Nothing to hold still: under reduced motion the component attaches no
+   gestures, so the wrapper never gets a transform in the first place. */

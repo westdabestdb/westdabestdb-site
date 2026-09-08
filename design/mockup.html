@@ -1,0 +1,505 @@
+<title>westdabestdb v3 Mockup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400..700&family=Geist+Mono:wght@400;500&family=Onest:wght@400..700&family=Instrument+Sans:wght@400..700&family=Schibsted+Grotesk:wght@400..700&family=Hanken+Grotesk:wght@400..700&family=Manrope:wght@400..700&family=Figtree:wght@400..700&family=Host+Grotesk:wght@400..700&family=Bricolage+Grotesque:opsz,wght@12..96,400..700&family=Inter:wght@400..700&family=JetBrains+Mono:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root {
+    --font-ui: "Onest", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    --font-display: var(--font-ui);
+    --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+    --bg: #ffffff;
+    --elev: #fafafa;
+    --p: #171717;
+    --s: #525252;
+    --t: #737373;
+    --q: #a3a3a3;
+    --line: rgba(0,0,0,.09);
+    --ring: rgba(0,0,0,.10);
+    --code: #f5f5f5;
+    --hover: rgba(0,0,0,.06);
+    --sel: rgba(23,23,23,.14);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #000000;
+      --elev: #0a0a0a;
+      --p: rgba(255,255,255,.90);
+      --s: rgba(255,255,255,.70);
+      --t: rgba(255,255,255,.50);
+      --q: rgba(255,255,255,.32);
+      --line: rgba(255,255,255,.09);
+      --ring: rgba(255,255,255,.10);
+      --code: #0e0e0e;
+      --hover: rgba(255,255,255,.10);
+      --sel: rgba(255,255,255,.22);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #000000;
+    --elev: #0a0a0a;
+    --p: rgba(255,255,255,.90);
+    --s: rgba(255,255,255,.70);
+    --t: rgba(255,255,255,.50);
+    --q: rgba(255,255,255,.32);
+    --line: rgba(255,255,255,.09);
+    --ring: rgba(255,255,255,.10);
+    --code: #0e0e0e;
+    --hover: rgba(255,255,255,.10);
+    --sel: rgba(255,255,255,.22);
+  }
+
+  * { box-sizing: border-box; }
+  html { background: var(--bg); }
+  body {
+    margin: 0; background: var(--bg); color: var(--p);
+    font-family: var(--font-ui);
+    font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased;
+  }
+  ::selection { background: var(--sel); }
+  a { color: inherit; text-decoration: none; }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--t); outline-offset: 3px; border-radius: 4px; }
+  .mono { font-family: var(--font-mono); }
+
+  /* ---- stage / phone frame ---- */
+  .stage { min-height: 100vh; padding-bottom: 120px; }
+  .stage.phone { padding-top: 32px; }
+  .stage.phone .site {
+    max-width: 390px; margin: 0 auto; border: 1px solid var(--ring); border-radius: 28px; overflow: hidden;
+    min-height: 780px; box-shadow: 0 30px 80px rgba(0,0,0,.18); background: var(--bg);
+  }
+  .stage.phone .wrap { padding-top: 48px; }
+  .stage.phone .wrap.post { padding-top: 40px; }
+
+  /* ---- sticky header (Brian: h-14, px-3, name p-2 font-medium) ---- */
+  .bar { position: sticky; top: 0; z-index: 5; display: flex; align-items: center; gap: 4px; height: 56px; padding: 0 12px; background: var(--bg); }
+  .stage.phone .bar { position: static; }
+  .bar a.name { padding: 8px; font-weight: 500; color: var(--p); border-radius: 8px; }
+  .bar a.name:hover { background: var(--hover); }
+  .bar .back { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 999px; color: var(--p); font-size: 18px; }
+  .bar .back:hover { background: var(--hover); }
+
+  /* ---- home container (Brian: max-w-2xl, gap-16, py-32, leading 1.6, px-4) ---- */
+  .wrap { max-width: 672px; margin: 0 auto; display: flex; flex-direction: column; gap: 64px; padding: 128px 16px 96px; line-height: 1.6; }
+  @media (max-width: 640px) { .wrap { padding-top: 64px; } }
+  .blk { display: flex; flex-direction: column; gap: 16px; }
+
+  .avatar { width: 64px; height: 64px; border-radius: 50%; margin-bottom: 32px; display: block; user-select: none; object-fit: cover; }
+  h1.name { font-family: var(--font-display); font-size: 24px; font-weight: 600; margin: 0; line-height: 1.6; }
+  p.bio { font-family: var(--font-display); font-size: 24px; font-weight: 600; color: var(--s); margin: 0; text-wrap: pretty; line-height: 1.6; }
+  .phead h1 { font-family: var(--font-display); }
+  p.bio a { color: var(--s); }
+  p.bio a:hover { text-decoration: underline; text-underline-offset: 2px; }
+
+  .social { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; padding: 0; margin: 0 0 0 -8px; }
+  .social a { display: inline-flex; align-items: center; gap: 8px; padding: 8px; font-size: 20px; color: var(--t); font-weight: 500; border-radius: 8px; }
+  .social a:hover { color: var(--p); background: var(--hover); }
+
+  h2.lbl { font-size: 16px; font-weight: 400; color: var(--q); margin: 0; line-height: 1.6; display: inline-flex; align-items: center; gap: 6px; width: fit-content; }
+  a h2.lbl::after { content: "→"; opacity: 0; transition: opacity .12s ease, transform .12s ease; transform: translateX(-2px); }
+  a:hover h2.lbl { color: var(--p); }
+  a:hover h2.lbl::after { opacity: 1; transform: none; }
+
+  ul.list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+  @media (max-width: 640px) { ul.list { gap: 16px; } }
+  .stage.phone ul.list { gap: 16px; }
+  ul.list li { display: flex; margin: 0; }
+  .item { display: inline-flex; flex: 1; align-items: baseline; gap: 8px; font-size: 20px; line-height: 1.6; min-width: 0; }
+  @media (max-width: 640px) { .item { flex-direction: column; align-items: flex-start; gap: 0; } }
+  .stage.phone .item { flex-direction: column; align-items: flex-start; gap: 0; }
+  .item .t { color: var(--p); font-weight: 500; text-underline-offset: 1px; white-space: nowrap; }
+  .item:hover .t { text-decoration: underline; }
+  .item .d { color: var(--q); flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  @media (max-width: 640px) { .item .d { white-space: normal; overflow: visible; } }
+  .stage.phone .item .d { white-space: normal; overflow: visible; }
+  .item .y { color: var(--q); flex: none; font-variant-numeric: tabular-nums; }
+  .item .new { font-size: 14px; font-weight: 500; color: var(--t); margin-left: 2px; }
+  .item .head { display: flex; align-items: baseline; gap: 8px; }
+  .item.stack { flex-direction: column; align-items: flex-start; gap: 0; }
+  .item.stack .top { display: flex; width: 100%; align-items: baseline; gap: 8px; min-width: 0; }
+  .item.stack .meta { font-size: 16px; color: var(--q); }
+  .item.stack .meta b { font-weight: 500; color: var(--t); }
+  @media (max-width: 640px) { .item.stack .top { flex-direction: column; align-items: flex-start; gap: 0; } }
+  .stage.phone .item.stack .top { flex-direction: column; align-items: flex-start; gap: 0; }
+
+  ul.now { list-style: disc; margin: 0; padding-left: 22px; display: flex; flex-direction: column; gap: 6px; font-size: 20px; color: var(--s); }
+  ul.now li::marker { color: var(--q); }
+  .now-stamp { color: var(--q); font-size: 16px; margin: 0; }
+
+  footer.foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; font-size: 16px; color: var(--q); }
+  footer.foot .links { display: flex; flex-wrap: wrap; gap: 4px 20px; }
+  footer.foot a:hover, footer.foot button:hover { color: var(--p); }
+  footer.foot button { all: unset; cursor: pointer; color: var(--q); }
+  footer.foot .mcp { display: inline-flex; align-items: center; gap: 8px; }
+  footer.foot .k { font-family: var(--font-mono); font-size: 12px; letter-spacing: .06em; color: var(--t); }
+
+  /* ---- post (Brian: max-w-3xl, gap-8, py-12→20, date tertiary, h1 3xl→4xl bold, body text-lg) ---- */
+  .wrap.post { max-width: 768px; gap: 32px; padding: 48px 16px 96px; }
+  @media (min-width: 1024px) { .wrap.post { padding: 64px 32px 96px; } }
+  @media (min-width: 1280px) { .wrap.post { padding: 80px 32px 96px; } }
+  .phead { display: flex; flex-direction: column; gap: 24px; }
+  .phead .date { color: var(--t); margin: 0; }
+  .phead h1 { font-size: 30px; line-height: 1.2; font-weight: 700; letter-spacing: -0.64px; margin: 0; text-wrap: balance; }
+  @media (min-width: 768px) { .phead h1 { font-size: 36px; } }
+  @media (min-width: 1024px) { .phead h1 { font-size: 40px; } }
+  .stage.phone .phead h1 { font-size: 30px; }
+  .pill { display: flex; flex-wrap: wrap; gap: 6px; font-size: 16px; color: var(--q); }
+  .pill .tag { color: var(--t); font-weight: 500; }
+  .body { display: flex; flex-direction: column; gap: 16px; font-size: 18px; line-height: 1.6; color: var(--p); }
+  .body p { margin: 0; }
+  .body a { text-decoration: underline; text-underline-offset: 2px; text-decoration-color: var(--q); }
+  .body a:hover { text-decoration-color: var(--p); }
+  .body h2 { font-size: 22px; font-weight: 600; letter-spacing: -.2px; margin: 16px 0 0; line-height: 1.3; }
+  .body ul { margin: 0; padding-left: 24px; display: flex; flex-direction: column; gap: 8px; list-style: disc; }
+  .body li { margin: 0; }
+  .body li b { font-weight: 500; }
+  .body blockquote { margin: 0; padding-left: 16px; border-left: 2px solid var(--ring); color: var(--s); }
+  .body pre { font-family: var(--font-mono); font-size: 14px; line-height: 1.6; background: var(--code); border-radius: 8px; padding: 14px 16px; overflow-x: auto; margin: 0; color: var(--s); }
+  .body pre .k { color: var(--p); font-weight: 500; }
+  .body pre .c { color: var(--q); }
+  .body img.hero { width: 100%; border-radius: 8px; display: block; aspect-ratio: 16/9; object-fit: cover; background: var(--elev); }
+  .body .sig { color: var(--s); }
+  .pnav { display: flex; justify-content: space-between; gap: 16px; padding-top: 16px; font-size: 16px; color: var(--q); }
+  .pnav a b { display: block; color: var(--p); font-weight: 500; }
+  .pnav a:hover b { text-decoration: underline; text-underline-offset: 1px; }
+
+  /* ---- work ---- */
+  .wrap.work { padding-top: 64px; }
+  .work-intro { font-size: 20px; color: var(--s); margin: 0; }
+
+  /* ---- additions from other sites, kept quiet ---- */
+  /* hover-refocus bio (joshpuckett.me): hovering a link dims the rest */
+  p.bio, p.bio a { transition: color .18s ease; }
+  p.bio:has(a:hover) { color: var(--q); }
+  p.bio:has(a:hover) a:hover { color: var(--p); text-decoration: none; }
+  /* proof line (danielwhite.uk idea, as plain text) */
+  p.proof { margin: 0; font-size: 16px; color: var(--q); font-variant-numeric: tabular-nums; }
+  p.proof b { font-weight: 600; color: var(--t); }
+  /* numbered writing rows (alexanderobenauer.com) */
+  .item .n { color: var(--q); font-variant-numeric: tabular-nums; flex: none; width: 2.4em; }
+  @media (max-width: 640px) { .item .n { display: none; } }
+  .stage.phone .item .n { display: none; }
+  /* per-post accent (destroytoday.com) */
+  .post-accent { --a: var(--p); }
+  .post-accent .body a { text-decoration-color: color-mix(in srgb, var(--a) 55%, transparent); }
+  .post-accent .body a:hover { color: var(--a); text-decoration-color: var(--a); }
+  .post-accent .pill .tag { color: var(--a); }
+  .post-accent ::selection { background: color-mix(in srgb, var(--a) 22%, transparent); }
+  .post-accent .body img.hero { background: color-mix(in srgb, var(--a) 10%, var(--elev)); }
+  .post-accent .body pre .k { color: var(--a); }
+  /* work filter (nelson.co) */
+  .filter { display: flex; flex-wrap: wrap; gap: 16px; }
+  .filter button { all: unset; cursor: pointer; font-size: 16px; font-weight: 500; color: var(--q); }
+  .filter button:hover { color: var(--p); }
+  .filter button[aria-pressed="true"] { color: var(--p); }
+  .filter button:focus-visible { outline: 2px solid var(--t); outline-offset: 3px; border-radius: 4px; }
+  .stackline { margin: 0; font-size: 16px; color: var(--q); }
+  .stackline b { font-weight: 500; color: var(--t); }
+  /* git-log footer line (chrisrodriguez.me) */
+  .gitline { margin: 0; font-family: var(--font-mono); font-size: 12.5px; color: var(--q); display: flex; flex-wrap: wrap; gap: 4px 12px; }
+  .gitline .h { color: var(--t); }
+  .gitline .add { color: #3f9c5a; } .gitline .del { color: #c0463f; }
+  footer.foot { flex-direction: column; gap: 14px; }
+  footer.foot .top { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; }
+
+  /* ---- mock chrome (not part of the site) ---- */
+  .chrome {
+    position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%);
+    display: flex; align-items: center; gap: 4px; padding: 5px;
+    background: var(--bg); border: 1px solid var(--ring); border-radius: 999px;
+    box-shadow: 0 8px 30px rgba(0,0,0,.18); z-index: 10; font-size: 13px;
+  }
+  .chrome button { all: unset; cursor: pointer; padding: 6px 12px; border-radius: 999px; color: var(--t); font-weight: 500; }
+  .chrome button:hover { color: var(--p); }
+  .chrome button[aria-pressed="true"] { background: var(--hover); color: var(--p); }
+  .chrome .sep { width: 1px; height: 18px; background: var(--ring); margin: 0 4px; }
+  .chrome .lbl { color: var(--q); padding: 0 6px 0 10px; font-size: 12px; }
+  .chrome select { appearance: none; -webkit-appearance: none; background: transparent; border: 0; color: var(--p); font: inherit; font-weight: 500; padding: 6px 22px 6px 12px; border-radius: 999px; cursor: pointer; max-width: 200px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23888' stroke-width='1.5'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 9px center; }
+  .chrome select:hover { background-color: var(--hover); }
+  .chrome select:focus-visible { outline: 2px solid var(--t); outline-offset: 2px; }
+  @media (max-width: 560px) { .chrome .lbl { display: none; } .chrome button { padding: 6px 9px; } }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+
+<div class="stage" id="stage">
+<div class="site">
+
+  <!-- ================= HOME ================= -->
+  <main id="view-home">
+    <div class="bar"><a class="name" href="#">Görkem Erol</a></div>
+    <div class="wrap">
+      <div class="blk">
+        <img class="avatar" src="data:image/jpeg;base64,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" alt="Görkem Erol">
+        <h1 class="name">Görkem Erol</h1>
+        <p class="bio">I'm a software engineer and tech lead living in Istanbul, building mobile apps and the backends behind them at <a href="#">4Human</a> and <a href="#">Lupasafe</a>.</p>
+      </div>
+
+      <div class="blk">
+        <ul class="social">
+          <li><a href="#">GitHub</a></li>
+          <li><a href="#">LinkedIn</a></li>
+          <li><a href="#">Email</a></li>
+          <li><a href="#">RSS</a></li>
+        </ul>
+        <p class="proof"><b>290</b> stars on GitHub · <b>50k</b> players on Blocklords · <b>2,500</b> Tesla bot users</p>
+      </div>
+
+      <section class="blk">
+        <a href="#" data-go="work"><h2 class="lbl">Work</h2></a>
+        <ul class="list">
+          <li><a class="item" href="#"><span class="t">4Human HRM</span><span class="d">HR app for Norwegian employers</span><span class="y">2024–</span></a></li>
+          <li><a class="item" href="#"><span class="t">Skopos agent</span><span class="d">Security agent for macOS and iOS</span><span class="y">2020–</span></a></li>
+          <li><a class="item" href="#"><span class="t">Blocklords</span><span class="d">Web3 game backend for 50k players</span><span class="y">2021–2023</span></a></li>
+          <li><a class="item" href="#"><span class="t">Lighthouse</span><span class="d">IDO platform for DeFi gaming</span><span class="y">2021–2022</span></a></li>
+          <li><a class="item" href="#"><span class="t">Mios</span><span class="d">Metabolic insights for athletes</span><span class="y">2023</span></a></li>
+          <li><a class="item" href="#"><span class="t">Pain Squad+</span><span class="d">Pain tracking for teens with cancer</span><span class="y">2019</span></a></li>
+        </ul>
+      </section>
+
+      <section class="blk">
+        <h2 class="lbl">Lab</h2>
+        <ul class="list">
+          <li><a class="item" href="#"><span class="head"><span class="t">Tesla Inventory Bot</span><span class="new">New</span></span><span class="d">Telegram alerts, built in a day</span></a></li>
+          <li><a class="item" href="#"><span class="t">Netgoals</span><span class="d">Netflix for motivational content</span></a></li>
+          <li><a class="item" href="#"><span class="t">Bubble Bottom Bar</span><span class="d">Flutter navigation bar, 290 stars</span></a></li>
+          <li><a class="item" href="#"><span class="t">Bottom Navigation Badge</span><span class="d">Badges for Flutter nav bars</span></a></li>
+        </ul>
+      </section>
+
+      <section class="blk">
+        <a href="#"><h2 class="lbl">Writing</h2></a>
+        <ul class="list">
+          <li><a class="item" href="#" data-go="post"><span class="n">010</span><span class="t">Tesla Inventory Bot</span><span class="d"></span><span class="y">Feb 2025</span></a></li>
+          <li><a class="item" href="#"><span class="n">009</span><span class="t">Grow and move on</span><span class="d"></span><span class="y">Jan 2025</span></a></li>
+          <li><a class="item" href="#"><span class="n">008</span><span class="t">Equilibrium</span><span class="d"></span><span class="y">Oct 2023</span></a></li>
+          <li><a class="item" href="#"><span class="n">007</span><span class="t">Mental health reigns supreme over a job</span><span class="d"></span><span class="y">Jul 2023</span></a></li>
+          <li><a class="item" href="#"><span class="n">006</span><span class="t">Personalize your workspace</span><span class="d"></span><span class="y">Jan 2023</span></a></li>
+        </ul>
+      </section>
+
+      <section class="blk">
+        <a href="#"><h2 class="lbl">Now</h2></a>
+        <p class="now-stamp">September 2026</p>
+        <ul class="now">
+          <li>Shipping the next 4Human HRM release and growing the mobile team.</li>
+          <li>Rewriting the Skopos macOS agent in SwiftUI.</li>
+          <li>Rebuilding this site. You're looking at it.</li>
+        </ul>
+      </section>
+
+      <footer class="foot">
+        <div class="top">
+          <div class="links">
+            <button id="copy">Copy email</button>
+            <a href="#">CV</a>
+            <a href="#">Colophon</a>
+          </div>
+          <a class="mcp" href="#"><span class="k">MCP</span><span>This site is agent-readable</span></a>
+        </div>
+        <p class="gitline"><span class="h">a3f9c1e</span><span>rebuild on next 16</span><span><span class="add">+1,204</span> <span class="del">−6,318</span></span><span>2 days ago</span></p>
+      </footer>
+    </div>
+  </main>
+
+  <!-- ================= POST ================= -->
+  <main id="view-post" class="post-accent" style="--a:#d32f2f" hidden>
+    <div class="bar"><a class="back" href="#" data-go="home" aria-label="Back">←</a><a class="name" href="#" data-go="home">Görkem Erol</a></div>
+    <div class="wrap post">
+      <div class="phead">
+        <p class="date">Feb 12, 2025</p>
+        <h1>Tesla Inventory Bot</h1>
+        <div class="pill"><span class="tag">serverless</span><span>·</span><span class="tag">supabase</span><span>·</span><span class="tag">telegram</span></div>
+      </div>
+      <div class="body">
+        <img class="hero" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 9'%3E%3C/svg%3E" alt="">
+        <p>A friend was tired of checking Tesla inventory, so I built a bot in one day for <a href="#">TMCTR</a>, our Tesla enthusiast community.</p>
+        <p>As one of the admins of TMCTR, a community of over 2,500 Tesla enthusiasts and growing daily, I've seen how passionate our members are about securing their dream Tesla. But there was one recurring problem: manually refreshing Tesla's website several times a day just to check for new inventory.</p>
+        <p>One of our members vented their frustration:</p>
+        <blockquote>"There has to be a better way."</blockquote>
+        <p>I agreed. So I built the solution, within one day.</p>
+        <h2>How I built it in a day</h2>
+        <p>To keep it scalable and cheap I went serverless-first with Supabase and the Telegram API.</p>
+        <ul>
+          <li><b>Postgres on Supabase</b> stores every inventory record.</li>
+          <li><b>Row-level security</b> so only admins can query or modify the data.</li>
+          <li><b>Cron</b> triggers a fetch every five minutes.</li>
+          <li><b>Edge functions</b> call Tesla's API and store what's new.</li>
+          <li><b>Telegram</b> pushes a message the moment a new car shows up.</li>
+        </ul>
+<pre><span class="c">-- poll every five minutes</span>
+<span class="k">select</span> cron.schedule(
+  'tesla-poll', '*/5 * * * *',
+  $$ <span class="k">select</span> net.http_post(
+       url := 'https://…/functions/v1/poll',
+       headers := '{"Authorization":"Bearer …"}'::jsonb) $$
+);</pre>
+        <h2>Why this matters</h2>
+        <p>This removes the tedious refreshing and makes the whole thing real time. On Supabase's serverless stack the bot runs with low latency, high availability and zero manual work, which is exactly what a growing community needs.</p>
+        <p class="sig">Peace and love,<br>Görkem</p>
+      </div>
+      <nav class="pnav">
+        <a href="#"><span>Next</span><b>Grow and move on</b></a>
+        <a href="#" style="text-align:right"><span>Previous</span><b>Equilibrium</b></a>
+      </nav>
+    </div>
+  </main>
+
+  <!-- ================= WORK ================= -->
+  <main id="view-work" hidden>
+    <div class="bar"><a class="back" href="#" data-go="home" aria-label="Back">←</a><a class="name" href="#" data-go="home">Görkem Erol</a></div>
+    <div class="wrap work">
+      <div class="blk">
+        <h1 class="name">Work</h1>
+        <p class="work-intro">Seven years of shipping apps and the systems behind them. Years and roles are drafts for you to correct.</p>
+        <p class="stackline"><b>Stack</b> Flutter · Swift · SwiftUI · Nest.js · Postgres · Supabase · Next.js · Rust · Web3</p>
+        <div class="filter" role="tablist" aria-label="Filter work">
+          <button data-filter="all" aria-pressed="true">All</button>
+          <button data-filter="teams" aria-pressed="false">With teams</button>
+          <button data-filter="own" aria-pressed="false">On my own</button>
+        </div>
+      </div>
+
+      <section class="blk" data-group="teams">
+        <h2 class="lbl">With teams</h2>
+        <ul class="list">
+          <li><a class="item stack" href="#"><span class="top"><span class="t">4Human HRM</span><span class="d">HR app for employees of Norwegian companies</span><span class="y">2024–</span></span><span class="meta"><b>Tech lead</b> · Flutter · CI/CD · public launch in six months</span></a></li>
+          <li><a class="item stack" href="#"><span class="top"><span class="t">Skopos agent</span><span class="d">Security agent for macOS and iOS, for Lupasafe</span><span class="y">2020–</span></span><span class="meta"><b>Founding engineer</b> · Swift · SwiftUI · RSA transport</span></a></li>
+          <li><a class="item stack" href="#"><span class="top"><span class="t">Blocklords</span><span class="d">Multiplayer strategy game on chain</span><span class="y">2021–2023</span></span><span class="meta"><b>Backend</b> · Nest.js · Postgres · Ethereum L2 · 50k active players</span></a></li>
+          <li><a class="item stack" href="#"><span class="top"><span class="t">Lighthouse</span><span class="d">IDO platform for DeFi gaming, by Seascape</span><span class="y">2021–2022</span></span><span class="meta"><b>Backend</b> · Nest.js · Web3 · 30k users</span></a></li>
+          <li><a class="item stack" href="#"><span class="top"><span class="t">Scape Store</span><span class="d">NFT marketplace for Seascape</span><span class="y">2021–2022</span></span><span class="meta"><b>Backend</b> · Nest.js · Web3</span></a></li>
+          <li><a class="item stack" href="#"><span class="top"><span class="t">Mios</span><span class="d">Training and nutrition insights for athletes</span><span class="y">2023</span></span><span class="meta"><b>Mobile</b> · Flutter</span></a></li>
+          <li><a class="item stack" href="#"><span class="top"><span class="t">Kustevent</span><span class="d">Digital menus and ordering for restaurants</span><span class="y">2021</span></span><span class="meta"><b>Mobile</b> · Flutter · App Store</span></a></li>
+          <li><a class="item stack" href="#"><span class="top"><span class="t">Pain Squad+</span><span class="d">Pain tracking for teens with cancer</span><span class="y">2019</span></span><span class="meta"><b>Mobile</b> · Flutter · App Store</span></a></li>
+        </ul>
+      </section>
+
+      <section class="blk" data-group="own">
+        <h2 class="lbl">On my own</h2>
+        <ul class="list">
+          <li><a class="item stack" href="#"><span class="top"><span class="head"><span class="t">Tesla Inventory Bot</span><span class="new">New</span></span><span class="d">Telegram alerts for new inventory</span><span class="y">2025</span></span><span class="meta"><b>Built</b> · Supabase · Edge functions · cron · 2,500-member community</span></a></li>
+          <li><a class="item stack" href="#"><span class="top"><span class="t">Netgoals</span><span class="d">Netflix for motivational content</span><span class="y">2021</span></span><span class="meta"><b>Founder</b> · Flutter · Node</span></a></li>
+          <li><a class="item stack" href="#"><span class="top"><span class="t">Bubble Bottom Bar</span><span class="d">Flutter bottom navigation widget</span><span class="y">2019</span></span><span class="meta"><b>Open source</b> · pub.dev · 290 stars · 49 forks · design by cubertodesign</span></a></li>
+          <li><a class="item stack" href="#"><span class="top"><span class="t">Bottom Navigation Badge</span><span class="d">Badges for Flutter nav bars</span><span class="y">2019</span></span><span class="meta"><b>Open source</b> · pub.dev</span></a></li>
+        </ul>
+      </section>
+
+      <footer class="foot">
+        <div class="top">
+          <div class="links"><a href="#">Copy email</a><a href="#">CV</a><a href="#">Colophon</a></div>
+          <a class="mcp" href="#"><span class="k">MCP</span><span>This site is agent-readable</span></a>
+        </div>
+      </footer>
+    </div>
+  </main>
+
+</div>
+</div>
+
+<!-- mock chrome: not part of the site -->
+<div class="chrome" role="toolbar" aria-label="Mockup controls">
+  <span class="lbl">View</span>
+  <button data-view="home" aria-pressed="true">Home</button>
+  <button data-view="post" aria-pressed="false">Post</button>
+  <button data-view="work" aria-pressed="false">Work</button>
+  <span class="sep"></span>
+  <button id="theme" aria-pressed="false">Dark</button>
+  <button id="phone" aria-pressed="false">Phone</button>
+  <span class="sep"></span>
+  <span class="lbl">Font</span>
+  <select id="font" aria-label="Font pairing">
+    <option value="onest">Onest + JetBrains Mono</option>
+    <option value="geist">Geist + Geist Mono</option>
+    <option value="instrument">Instrument Sans + JetBrains Mono</option>
+    <option value="schibsted">Schibsted Grotesk + IBM Plex Mono</option>
+    <option value="hanken">Hanken Grotesk + IBM Plex Mono</option>
+    <option value="manrope">Manrope + JetBrains Mono</option>
+    <option value="figtree">Figtree + JetBrains Mono</option>
+    <option value="host">Host Grotesk + Geist Mono</option>
+    <option value="bricolage">Bricolage (name, bio) + Onest</option>
+    <option value="inter">Inter (previous)</option>
+  </select>
+</div>
+
+<script>
+(function () {
+  var views = { home: document.getElementById('view-home'), post: document.getElementById('view-post'), work: document.getElementById('view-work') };
+  var btns = Array.prototype.slice.call(document.querySelectorAll('.chrome button[data-view]'));
+  function show(name) {
+    Object.keys(views).forEach(function (k) { views[k].hidden = (k !== name); });
+    btns.forEach(function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-view') === name)); });
+    window.scrollTo(0, 0);
+  }
+  btns.forEach(function (b) { b.addEventListener('click', function () { show(b.getAttribute('data-view')); }); });
+  Array.prototype.slice.call(document.querySelectorAll('[data-go]')).forEach(function (a) {
+    a.addEventListener('click', function (e) { e.preventDefault(); show(a.getAttribute('data-go')); });
+  });
+
+  var root = document.documentElement;
+  var themeBtn = document.getElementById('theme');
+  function isDark() {
+    var t = root.getAttribute('data-theme');
+    if (t) return t === 'dark';
+    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  }
+  function paintTheme() {
+    var d = isDark();
+    themeBtn.textContent = d ? 'Light' : 'Dark';
+    themeBtn.setAttribute('aria-pressed', String(d));
+  }
+  themeBtn.addEventListener('click', function () { root.setAttribute('data-theme', isDark() ? 'light' : 'dark'); paintTheme(); });
+  paintTheme();
+
+  var stage = document.getElementById('stage');
+  var phoneBtn = document.getElementById('phone');
+  phoneBtn.addEventListener('click', function () {
+    var on = !stage.classList.contains('phone');
+    stage.classList.toggle('phone', on);
+    phoneBtn.setAttribute('aria-pressed', String(on));
+  });
+
+
+
+  // work filter (nelson.co style section switching)
+  var fbtns = Array.prototype.slice.call(document.querySelectorAll('.filter button[data-filter]'));
+  var groups = Array.prototype.slice.call(document.querySelectorAll('[data-group]'));
+  fbtns.forEach(function (b) {
+    b.addEventListener('click', function () {
+      var f = b.getAttribute('data-filter');
+      fbtns.forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); });
+      groups.forEach(function (g) { g.hidden = !(f === 'all' || g.getAttribute('data-group') === f); });
+    });
+  });
+
+  // font picker: swaps the three font variables live
+  var FONTS = {
+    geist:      { ui: '"Geist", ui-sans-serif, system-ui, sans-serif', mono: '"Geist Mono", ui-monospace, Menlo, monospace' },
+    onest:      { ui: '"Onest", ui-sans-serif, system-ui, sans-serif', mono: '"JetBrains Mono", ui-monospace, Menlo, monospace' },
+    instrument: { ui: '"Instrument Sans", ui-sans-serif, system-ui, sans-serif', mono: '"JetBrains Mono", ui-monospace, Menlo, monospace' },
+    schibsted:  { ui: '"Schibsted Grotesk", ui-sans-serif, system-ui, sans-serif', mono: '"IBM Plex Mono", ui-monospace, Menlo, monospace' },
+    hanken:     { ui: '"Hanken Grotesk", ui-sans-serif, system-ui, sans-serif', mono: '"IBM Plex Mono", ui-monospace, Menlo, monospace' },
+    manrope:    { ui: '"Manrope", ui-sans-serif, system-ui, sans-serif', mono: '"JetBrains Mono", ui-monospace, Menlo, monospace' },
+    figtree:    { ui: '"Figtree", ui-sans-serif, system-ui, sans-serif', mono: '"JetBrains Mono", ui-monospace, Menlo, monospace' },
+    host:       { ui: '"Host Grotesk", ui-sans-serif, system-ui, sans-serif', mono: '"Geist Mono", ui-monospace, Menlo, monospace' },
+    bricolage:  { ui: '"Onest", ui-sans-serif, system-ui, sans-serif', display: '"Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif', mono: '"JetBrains Mono", ui-monospace, Menlo, monospace' },
+    inter:      { ui: '"Inter", ui-sans-serif, system-ui, sans-serif', mono: '"JetBrains Mono", ui-monospace, Menlo, monospace' }
+  };
+  var fontSel = document.getElementById('font');
+  function applyFont(key) {
+    var f = FONTS[key] || FONTS.onest;
+    root.style.setProperty('--font-ui', f.ui);
+    root.style.setProperty('--font-display', f.display || f.ui);
+    root.style.setProperty('--font-mono', f.mono);
+    fontSel.value = FONTS[key] ? key : 'onest';
+    try { localStorage.setItem('v3-font-2', fontSel.value); } catch (e) {}
+  }
+  fontSel.addEventListener('change', function () { applyFont(fontSel.value); });
+  var savedFont = 'onest';
+  try { savedFont = localStorage.getItem('v3-font-2') || 'onest'; } catch (e) {}
+  applyFont(savedFont);
+
+  var copy = document.getElementById('copy');
+  copy.addEventListener('click', function () {
+    var done = function () { copy.textContent = 'Email copied'; setTimeout(function () { copy.textContent = 'Copy email'; }, 1600); };
+    try { navigator.clipboard.writeText('westdabestdb@gmail.com').then(done, done); } catch (e) { done(); }
+  });
+})();
+</script>
