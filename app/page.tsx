@@ -55,20 +55,6 @@ export default function Home() {
           </List>
         </Section>
 
-        <Section label="Side projects">
-          <List>
-            {lab.map((project) => (
-              <Row
-                key={project.slug}
-                title={project.name}
-                href={project.link}
-                description={project.description}
-                preview={project.preview}
-              />
-            ))}
-          </List>
-        </Section>
-
         <Section label="Writing" href="/writing">
           <List>
             {posts.map((post) => (
@@ -78,6 +64,20 @@ export default function Home() {
                 href={post.url}
                 number={post.number}
                 year={formatMonthYear(post.date)}
+              />
+            ))}
+          </List>
+        </Section>
+
+        <Section label="Side projects">
+          <List>
+            {lab.map((project) => (
+              <Row
+                key={project.slug}
+                title={project.name}
+                href={project.link}
+                description={project.description}
+                preview={project.preview}
               />
             ))}
           </List>

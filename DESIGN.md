@@ -199,7 +199,7 @@ the page.
 
 | route | content |
 |-------|---------|
-| `/` | Avatar, name, bio (links to Flovi, Charles, 4Human, Lupasafe) → social links (GitHub, LinkedIn, Email) → **Work** (projects with `featured: true`, newest first: ongoing, then by end year, start year, `order`) → **Side projects** (`lab: true`) → **Writing** (latest 5, numbered) → footer |
+| `/` | Avatar, name, bio (links to Flovi, Charles, 4Human, Lupasafe) → social links (GitHub, LinkedIn, Email, CV) → **Work** (projects with `featured: true`, newest first: ongoing, then by end year, start year, `order`) → **Writing** (latest 5, numbered) → **Side projects** (`lab: true`) → footer |
 | `/work` | `← Back` → "Work" h1, intro, "Stack" line, plain-text filter All / With teams / On my own → sections "With teams" (`own: false`) and "On my own" (`own: true`); rows show a second grey meta line: role · stack · proof |
 | `/writing` | all posts, numbered, newest first, year at the end |
 | `/blog/[slug]` | post page as specified; per-post accent |
