@@ -13,6 +13,7 @@ export {
 
 export { getCv } from './cv'
 export { getSite } from './site'
+export { getLampsPage, getLampsRoutes } from './lamps'
 
 export type {
   BioSegment,
@@ -21,6 +22,10 @@ export type {
   CvRole,
   CvSideProject,
   CvSkillGroup,
+  LampsDoc,
+  LampsDocFrontmatter,
+  LampsLang,
+  LampsPageName,
   Post,
   PostFrontmatter,
   Project,

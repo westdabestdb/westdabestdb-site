@@ -1,0 +1,86 @@
+---
+title: "Lamps Support"
+description: "Support for the Lamps app on iPhone and iPad: pairing, troubleshooting and contact."
+language: "English"
+date: "2026-11-05"
+---
+
+## What is Lamps?
+
+Lamps is an independent app that lets you control Bluetooth ceiling lamps from your iPhone or iPad, without a hub.
+
+These lamps only listen to Bluetooth Low Energy advertisements. The app broadcasts command packets directly from your device. No hub or extra hardware, and it works offline.
+
+## Features
+
+- Add a lamp with a guided pairing wizard
+- Multiple lamps
+- Power on and off, brightness ring dial
+- Warmth slider (cold and warm white)
+- Presets: Daylight, Reading, Cozy, Evening, Night
+- Identify: blinks the lamp so you can tell which one it is
+- Pair again and unpair
+- Help for lamps that respond together
+- Turkish and English, with an in-app language switch
+- Free. No ads, no accounts, no tracking.
+
+## Adding and pairing a lamp
+
+Before you start, turn on Bluetooth on your iPhone or iPad and allow the app to use Bluetooth. You need to be able to reach the lamp's wall switch.
+
+1. In the app, tap **Add lamp** and give the lamp a name you'll recognize.
+2. Only the lamp you are pairing should have power. Turn off other lamps at the wall switch, or they'll pair too.
+3. Turn the lamp off at the wall switch and keep it off for 5 seconds.
+4. Turn the lamp on at the wall switch, then tap **Pair** within 5 seconds. The app sends the pairing command in 4 protocol variants, one after another.
+5. If the lamp blinked, tap **Yes**.
+6. In step two, tap **Test** and watch the lamp. If it turned on or off, tap **Yes**. If it didn't react, tap **No, try the next one**. The app saves the variant your lamp reacts to.
+
+## Troubleshooting
+
+### The lamp doesn't react
+
+- **Try another variant.** On the lamp's page, tap **Edit**, change **Protocol variant**, tap **Save** and try **Power**. To test the variants from the start, delete the lamp and add it again with **Add lamp**.
+- **Power-cycle and start over.** Keep the lamp off at the wall switch for 5 seconds, turn it on, and pair within 5 seconds. The lamp only accepts the pairing command right after it is powered on.
+- **Move closer.** Bluetooth advertisements have a limited range. Stand in the same room, close to the lamp.
+- **Check Bluetooth.** Bluetooth must be on, and Lamps must be allowed under **Settings > Privacy & Security > Bluetooth**.
+
+If the app says **No variant worked**, cut the lamp's power and tap **Start over**, or tap **Save anyway** and pick the variant later in **Edit**.
+
+### Lamps respond together
+
+If two lamps respond to one key, or the wrong lamp turns on, they share the same ID. Pair them again one at a time. The same steps are in the app under **Fix mixed-up lamps** on the lamp's page.
+
+1. Turn off all lamps at the wall switch.
+2. In the app, open the first lamp, tap **Edit**, set **Device ID** to **Random** and tap **Save**.
+3. Turn only that lamp back on at the wall.
+4. Within 5 seconds, tap **Pair again** and wait for it to blink.
+5. Test **Power**. Only that lamp should respond.
+6. Repeat for each lamp, one at a time. Then turn them all back on.
+
+Tip: before you start, give each lamp a name you'll recognize.
+
+### Which lamp is which?
+
+On the lamp's page, tap **Identify**. That lamp blinks.
+
+### Unpairing
+
+When you tap **Unpair**, the lamp forgets this device and won't respond until it's paired again. If it still responds, turn it off and on at the wall, then tap **Unpair** within 5 seconds.
+
+### Changing the language
+
+Tap the globe icon at the top of the lamp list, then under **Language** choose Türkçe, English or **System**.
+
+## Contact
+
+Have a question, or is your lamp not working? Send an email. Including your lamp model, the variants you tried, your iPhone or iPad model and iOS or iPadOS version helps me answer faster.
+
+[westdabestdb@gmail.com](mailto:westdabestdb@gmail.com?subject=Lamps%20support)
+
+## Notes
+
+Lamps is an independent app and is not affiliated with any lamp maker.
+
+The protocol code is a Swift port of [NicoIIT/esphome-components](https://github.com/NicoIIT/esphome-components) (MIT License, Copyright (c) 2023-2025 NicoIIT).
+
+Privacy: Lamps collects no data. [Privacy Policy](/lamps/privacy#en)

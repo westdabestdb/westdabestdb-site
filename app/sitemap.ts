@@ -1,7 +1,7 @@
 import type { MetadataRoute } from 'next'
 
 import { tagPath } from '@/components/writing'
-import { getPosts, getSite, getTags } from '@/lib/content'
+import { getLampsRoutes, getPosts, getSite, getTags } from '@/lib/content'
 import { toDate } from '@/lib/format'
 
 const STATIC_ROUTES = ['', '/work', '/writing', '/tags'] as const
@@ -27,6 +27,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: newest,
       changeFrequency: 'monthly' as const,
       priority: 0.3,
+    })),
+    // The Lamps app's support page and privacy policy, both languages on one
+    // URL; dated by the newer of the two texts.
+    ...getLampsRoutes().map((route) => ({
+      url: `${base}${route.url}`,
+      lastModified: toDate(route.date),
+      changeFrequency: 'yearly' as const,
+      priority: 0.5,
     })),
     ...posts.map((post) => ({
       url: `${base}${post.url}`,
