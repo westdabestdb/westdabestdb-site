@@ -179,3 +179,40 @@ export type CvSkillGroup = z.infer<typeof cvSkillGroupSchema>
 export type CvSideProject = z.infer<typeof cvSideProjectSchema>
 export type CvEducation = z.infer<typeof cvEducationSchema>
 export type Cv = z.infer<typeof cvSchema>
+
+/* ------------------------------------------------------------------ *
+ * lamps/<page>.<lang>.mdx
+ * ------------------------------------------------------------------ */
+
+/** `support` → /lamps, `privacy` → /lamps/privacy. */
+export const lampsPageNameSchema = z.enum(['support', 'privacy'])
+
+/** Every Lamps page carries both languages, rendered in this order. */
+export const lampsLangSchema = z.enum(['tr', 'en'])
+
+export const lampsDocFrontmatterSchema = z.object({
+  /** This language's page title: the h1 (first language) or the line under
+      it, and one half of the `<title>`. */
+  title: z.string(),
+  /** One half of the meta description. */
+  description: z.string(),
+  /** The language's own name — "Türkçe", "English" — for the in-page switch
+      and the grey label above its half of the page. */
+  language: z.string(),
+  /** When this text last changed. On the privacy policy it is the effective
+      date, which the body prints with `<DocDate />`. */
+  date: isoDate,
+})
+
+export type LampsPageName = z.infer<typeof lampsPageNameSchema>
+export type LampsLang = z.infer<typeof lampsLangSchema>
+export type LampsDocFrontmatter = z.infer<typeof lampsDocFrontmatterSchema>
+
+export type LampsDoc = LampsDocFrontmatter & {
+  page: LampsPageName
+  lang: LampsLang
+  /** `/lamps` or `/lamps/privacy`; both languages share it. */
+  url: string
+  /** Raw MDX body, without frontmatter. */
+  body: string
+}

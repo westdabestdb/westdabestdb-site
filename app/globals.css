@@ -791,3 +791,24 @@ footer.foot button:focus-visible {
   text-decoration: none;
 }
 /* == /static rows == */
+
+/* == lamps == */
+/* /lamps and /lamps/privacy. The line under the h1 is the /work intro's 20px
+   `s`; the language name over each half is the section label's 16px `q`, as a
+   <p> because the prose under it opens with its own h2. */
+.lamps-sub {
+  font-size: 20px;
+  color: var(--s);
+  margin: 0;
+}
+.lamps-label {
+  font-size: 16px;
+  color: var(--q);
+  margin: 0;
+}
+/* The Türkçe / English switch jumps to these; keep the label off the
+   viewport's top edge when it lands. */
+.lamps-lang {
+  scroll-margin-top: 32px;
+}
+/* == /lamps == */
